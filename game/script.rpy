@@ -4,7 +4,8 @@
 # name of the character.
 
 define e = Character("Eileen")
-
+define t = Character("Trendy", color="#c8ffc8")
+default test = "hi my name is trendy!"
 
 # The game starts here.
 
@@ -20,13 +21,17 @@ label start:
     # replace it by adding a file named "eileen happy.png" to the images
     # directory.
 
-    show eileen happy
+    show trendy
 
     # These display lines of dialogue.
 
-    e "You've created a new Ren'Py game."
+    t test
 
-    e "Once you add a story, pictures, and music, you can release it to the world!"
+    e "I need you to help me pleaaaaase!"
+
+    show eileen happy
+
+    e "okay okay what is it? I'm tired"
 
     # This ends the game.
 
