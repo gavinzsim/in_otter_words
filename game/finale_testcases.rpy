@@ -10,6 +10,7 @@ init python:
 
 testcase finale_fallback_render:
     $ os.environ.pop("OPENROUTER_API_KEY", None)
+    $ store.openrouter_key = None
     run Jump("finale")
     advance until "The End" timeout 30.0
     assert eval finale_result is not None

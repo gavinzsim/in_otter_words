@@ -102,9 +102,10 @@ init python:
                 "scenes": validated, "closing_message": closing}
 
     def request_openrouter_finale(context):
-        api_key = os.environ.get("OPENROUTER_API_KEY")
+        # Key comes from game/secrets.rpy (git-ignored); env var is the fallback.
+        api_key = getattr(store, "openrouter_key", None) or os.environ.get("OPENROUTER_API_KEY")
         if not api_key:
-            raise RuntimeError("OPENROUTER_API_KEY is missing")
+            raise RuntimeError("openrouter_key is missing (define it in secrets.rpy or set OPENROUTER_API_KEY)")
         payload = {
             "model": OPENROUTER_FINALE_MODEL, "stream": False, "temperature": 0.7,
             "max_tokens": 2200,
