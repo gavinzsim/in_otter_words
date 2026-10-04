@@ -2,6 +2,7 @@
 init python:
     import json
     import os
+    import time
     import urllib.error
     import urllib.request
 
@@ -153,9 +154,14 @@ init python:
 
     def request_openrouter_finale(context):
         # Key comes from game/secrets.rpy (git-ignored); env var is the fallback.
-        api_key = getattr(store, "openrouter_key", None) or os.environ.get("OPENROUTER_API_KEY")
+        stored_key = getattr(store, "openrouter_key", None)
+        api_key = load_openrouter_key()
         if not api_key:
             raise RuntimeError("openrouter_key is missing (define it in secrets.rpy or set OPENROUTER_API_KEY)")
+        if isinstance(stored_key, str) and stored_key.strip() == api_key:
+            renpy.log("[Finale] Using API key from secrets.rpy.")
+        else:
+            renpy.log("[Finale] Using API key from OPENROUTER_API_KEY environment variable.")
         payload = {
             "model": OPENROUTER_FINALE_MODEL, "stream": False, "temperature": 0.7,
             "max_tokens": 3000,
@@ -176,10 +182,19 @@ init python:
             headers={"Authorization": "Bearer " + api_key,
                      "Content-Type": "application/json", "X-Title": "In Otter Words"},
             method="POST")
-        with urllib.request.urlopen(request, timeout=90) as response:
-            if response.status != 200:
-                raise RuntimeError("OpenRouter HTTP %d" % response.status)
-            raw = response.read(131073)
+        started = time.time()
+        try:
+            with urllib.request.urlopen(request, timeout=90) as response:
+                if response.status != 200:
+                    raise RuntimeError("OpenRouter HTTP %d" % response.status)
+                raw = response.read(131073)
+        except Exception as error:
+            # The reason (e.g. "timed out", "HTTP Error 401") is safe to log; bodies are not.
+            reason = getattr(error, "reason", "") or ""
+            renpy.log("[Finale] Request failed after %.1fs: %s %s"
+                      % (time.time() - started, type(error).__name__, reason))
+            raise
+        renpy.log("[Finale] OpenRouter responded in %.1fs." % (time.time() - started))
         if len(raw) > 131072:
             raise ValueError("oversized OpenRouter response")
         envelope = json.loads(raw.decode("utf-8"))
