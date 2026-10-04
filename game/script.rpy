@@ -21,7 +21,7 @@ image StormyHappy = "images/StormyHappy.png"
 image StormyHappySpeaking = "images/Stormy_Happy_Speaking.png"
 image StormyNormal = "images/Stormy_Normal.png"
 image StormySpeaking = "images/Stormy_Speaking.png"
-image 
+image StormyShocked = "images/Stormy_Shocked.png"
 
 
 # VARIABLES
