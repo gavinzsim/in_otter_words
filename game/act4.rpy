@@ -62,6 +62,7 @@ label act4:
 
     menu:
         "Not Really":
+            $ record_decision("stormy_visit", "reluctant")
             y "Sorry dude, I'm not really a science guy."
             s "Oh... guess I'll just go back to my room and cry myself to sleep."
             y "Uh, wait, I meant of course I will!"
@@ -69,6 +70,7 @@ label act4:
             jump act4_part2
 
         "Of course!":
+            $ record_decision("stormy_visit", "enthusiastic")
             y "Yeah, let's do it!"
             s "Yay! Finally, someone to show it to. Let's go!"
             y "Wait, you couldn't show it to anyone else? What about Sparky or the others?"
@@ -160,6 +162,7 @@ label building_minigame:
 
     menu:
         "Calibration wrench":
+            $ record_decision("stormy_first_component", "wrench")
             $ correct_tools += 1
             $ machine_progress += 1
             y "This one?"
@@ -169,6 +172,7 @@ label building_minigame:
             jump second_component
 
         "Rubber duck":
+            $ record_decision("stormy_first_component", "duck")
             $ wrong_tools += 1
             y "This?"
             s "..."
@@ -188,6 +192,7 @@ label second_component:
 
     menu:
         "A giant bucket":
+            $ record_decision("stormy_stabilizer", "bucket")
             $ correct_tools += 1
             $ machine_progress += 1
             s "Excellent!"
@@ -196,6 +201,7 @@ label second_component:
             jump third_component
 
         "A giant spoon":
+            $ record_decision("stormy_stabilizer", "spoon")
             $ wrong_tools += 1
             sp "I vote for the spoon."
             s "Why?"
@@ -215,6 +221,7 @@ label third_component:
 
     menu:
         "Input a sorting system that puts everything in different bins within the machine":
+            $ record_decision("stormy_sorting", "sort")
             $ correct_tools += 1
             $ safety += 2
             $ machine_progress += 1
@@ -225,6 +232,7 @@ label third_component:
             jump machine_ready
 
         "Ignore it and finish the project":
+            $ record_decision("stormy_sorting", "skip")
             $ safety -= 2
             $ wrong_tools += 1
             y "We don't really need that."
@@ -268,6 +276,7 @@ label finale_decision:
 
 
 label stormy_good_ending:
+    $ finale_machine_outcome = "working_with_maintenance_plan"
     scene bg lab
     with fade
 
@@ -289,10 +298,11 @@ label stormy_good_ending:
     y "You know what I mean."
     s "..."
     s "Thank you, Yinny. And thank you all for helping."
-    return
+    jump finale
 
 
 label otter_disaster:
+    $ finale_machine_outcome = "prototype_broke_after_unsafe_build"
     scene bg lab
     with vpunch
 
@@ -352,4 +362,4 @@ label otter_disaster:
     s "And maybe..."
     s "A checklist?"
     y "Definitely a checklist..."
-    return
+    jump finale

@@ -66,10 +66,12 @@ label act3_sparky:
 
     menu:
         "Sure, go ahead.":
+            $ record_decision("sparky_listen", "listen")
             $ sparky_bond += 1
             sp "Thanks!"
 
         "Not really in the mood.":
+            $ record_decision("sparky_listen", "decline")
             $ cynicism += 1
             sp "That's okay."
             sp "I'll ask anyway, but gently."
@@ -126,11 +128,13 @@ label sparky_walk:
 
     menu:
         "It's a start, I guess.":
+            $ record_decision("sparky_sidewalk", "start")
             $ sparky_bond += 1
             y "Okay. It is kind of nice."
             sp "See? Progress!"
 
         "That's the bare minimum.":
+            $ record_decision("sparky_sidewalk", "bare_minimum")
             $ cynicism += 1
             y "A sidewalk shouldn't count as an achievement."
             show SparkyWorried at sparky_right
@@ -212,11 +216,13 @@ label sparky_river:
 
     menu:
         "So I should just be happy with small wins?":
+            $ record_decision("sparky_small_wins", "ask")
             $ sparky_bond += 1
             sp "Not 'just.' You should be proud of them AND keep going."
             sp "You get to do both. No one said you can only do one of them."
 
         "Small wins don't fix big problems.":
+            $ record_decision("sparky_small_wins", "dismiss")
             $ cynicism += 1
             sp "..."
             show SparkySad at sparky_right
@@ -344,12 +350,14 @@ label sparky_resolution:
 
     menu:
         "Promise to try it":
+            $ record_decision("sparky_daily_reflection", "promise")
             $ sparky_bond += 2
             y "Okay. I'll try."
             y "Today's thing is... the fish."
             sp "A great start!"
 
         "Joke about it":
+            $ record_decision("sparky_daily_reflection", "joke")
             $ sparky_bond += 1
             y "Today's good thing is that nobody has dropped garbage on me."
             sp "A high bar, and you cleared it!"
