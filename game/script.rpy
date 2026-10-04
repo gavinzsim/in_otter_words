@@ -93,7 +93,7 @@ label wake_up:
 
     y "..."
 
-    y "No."
+    y "No, it's too early..."
 
     menu:
         "Get up":
@@ -117,7 +117,7 @@ label wake_up:
 
             "BEEP. BEEP. BEEP."
 
-            y "How is five minutes already over?"
+            y "How is five minutes already over?!"
 
             jump wake_up
 
@@ -145,6 +145,8 @@ label snooze_ending:
 
     centered "Yinny successfully avoided both responsibility and the plot."
 
+    centered "Congrats, aren't you proud of yourself?"
+
     pause 3.0
 
     return
@@ -159,9 +161,7 @@ label get_up:
 
     show yinny at yinny_left
 
-    y "Fine. I'm awake."
-
-    y "Technically."
+    y "Fine. I'm awake... at least enough to function."
 
     scene bg bathroom
     with fade
@@ -174,9 +174,7 @@ label get_up:
 
     y "..."
 
-    y "Huh."
-
-    y "A little browner than yesterday."
+    y "Huh... A little browner than yesterday."
 
     y "Probably fine."
 
@@ -201,7 +199,7 @@ label outside:
 
     y "Alright. New day."
 
-    y "Fresh air."
+    y "Fresh air... *Inhales*..."
 
     pause 0.5
 
@@ -217,14 +215,16 @@ label outside:
 
     y "Rude."
 
-    "Yinny takes another step."
+    "Yinny starts to take another step forward."
 
     scene black
     with hpunch
 
-    "FWOOOOSH!"
+    "Clitter. Clatter... CRASH!"
+    with hpunch
 
-    y "HUH?!"
+    y "AAAAAHHHHHHH!?!"
+    with hpunch
 
     "A mountain of garbage collapses on top of Yinny."
 
@@ -237,15 +237,15 @@ label outside:
 
     y "WHY IS THERE A WHOLE CHAIR IN HERE?!"
 
-    s "Yinny?"
+    s "Yinny...?"
 
     s "Is that you?"
 
-    y "NO."
+    y "No... *embarrassed*"
 
-    y "I'M THE GARBAGE."
+    y "...I'M THE GARBAGE, FEAR ME D:<"
 
-    s "Hang on."
+    s "*Sighs* Hold on, Yinny."
 
     "Stormy starts pulling bags away."
 
@@ -259,7 +259,7 @@ label outside:
 
     y "Physically?"
 
-    y "Probably."
+    y "Probably. Mentally? Let's not talk about that."
 
     s "Good enough."
 
@@ -280,13 +280,13 @@ label stormy_intro:
 
     s "Yesterday I saw a fish swimming around a shopping cart."
 
-    y "Maybe it was moving."
+    y "Maybe it was trying to get in on the seafood sales, it ain't cheap."
 
-    s "Yinny."
+    s "... Yinny."
 
     y "Right. Environmental disaster."
 
-    s "Everyone just keeps acting like this is normal."
+    s "Everyone just keeps acting like this is normal. We all know it's not."
 
     "Yinny looks around."
 
@@ -300,15 +300,15 @@ label stormy_intro:
 
     y "I guess I never really thought about it."
 
-    s "Well?"
+    s "Well...?"
 
-    s "Are you going to?"
+    s "Are you going to do anything?"
 
     menu:
-        "Try to do something about it":
+        "Try to do something.":
             jump choose_help
 
-        "It's probably not my problem":
+        "It's not my problem":
             jump trash_ending
 
 
@@ -322,23 +322,21 @@ label trash_ending:
 
     s "Seriously?"
 
-    y "I'm just one otter."
-
-    y "What am I supposed to do?"
+    y "I'm just one otter. What am I supposed to do?"
 
     s "..."
 
-    y "Anyway, see you later!"
+    y "Anyways, see you later!"
 
     hide stormy
 
     "Yinny continues walking."
 
-    "They carefully step around several garbage bags."
+    "They carefully step around several piles of litter..."
 
-    "Then around a broken television."
+    "... ducking past a broken television..."
 
-    "Then around another pile of garbage."
+    "... then hopped over a pile of garbage."
 
     y "See?"
 
@@ -364,23 +362,19 @@ label trash_ending:
 
 label choose_help:
 
-    y "..."
-
-    y "Okay."
+    y "... ... ... okay."
 
     y "Maybe you're right."
 
     s "I usually am."
 
-    y "Let's not get carried away."
+    y "Let's not get carried away with that. You were only right on this."
 
     s "So you'll help?"
 
-    y "Yeah."
+    y "Yeah... but I don't exactly know how."
 
-    y "I don't exactly know how..."
-
-    y "But this can't just keep being normal."
+    y "However, this can't just keep being the norm."
 
     s "That's a start."
 
@@ -388,7 +382,7 @@ label choose_help:
 
     s "I might know some people."
 
-    y "That sounds suspicious."
+    y "That sounds suspicious. I hope you're not planning to take me out of my lack of sleep misery."
 
     s "You'll survive."
 
@@ -420,19 +414,15 @@ label main_story:
     show yinny at yinny_left
     show stormy at stormy_right
 
-    y "Alright."
-
-    y "Let's go save the world."
+    y "Alright. Let's go save the world."
 
     s "Maybe start with the neighborhood."
 
-    y "Less dramatic."
+    y "It's less dramatic, there's no flair."
 
     s "Much more achievable."
 
-    y "Fine."
-
-    y "Let's go mildly improve the world."
+    y "Fine. Let's go about mildly improving the world."
 
     # Later:
     # jump trendy_arc

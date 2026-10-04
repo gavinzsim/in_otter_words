@@ -73,7 +73,7 @@ label act1_start:
 
     s "So... still feeling heroic?"
 
-    y "I said I wanted to help. I never used the word heroic."
+    y "I said I wanted to help. I never used the word heroic. I'm just doing what I can."
 
     s "Good, because Trendy already claimed that one."
 
@@ -81,7 +81,7 @@ label act1_start:
 
     s "She's trying to organize a cleanup. Apparently the garbage problem has become a content opportunity."
 
-    y "That sentence somehow made me more worried."
+    y "That sentence somehow made me more worried...She's not doing some viral trend right...?"
 
     s "Just go talk to her."
 
@@ -121,7 +121,7 @@ label trendy_intro:
 
     t "Wait. Seriously?"
 
-    y "I'd prefer not to relive it."
+    y "I'd prefer not to relive it. 0/10 experience rating, would not recommend."
 
     show trendy speaking at trendy_right
 
@@ -225,7 +225,7 @@ label trendy_campaign:
 
             t "People know where to go, what to bring, and what we're doing."
 
-            y "Organization. Terrifying."
+            y "Organization... Terrifying."
 
         "Offer snacks and a group photo afterward.":
             $ community_support += 1
@@ -249,7 +249,7 @@ label trendy_campaign:
 
             t "We should not."
 
-            y "Important distinction."
+            y "Important distinction, we still can."
 
     "The post goes live."
 
@@ -265,7 +265,7 @@ label trendy_campaign:
 
         "How should Yinny respond?"
 
-        "\"You're right. But it can fix this block today.\"":
+        "\"You're right. But it can fix this block today. One step at a time.\"":
             $ community_support += 2
 
             show trendy happy speaking at trendy_right
@@ -363,7 +363,7 @@ label trendy_cleanup:
 
         t "Not exactly viral."
 
-        y "They're still here."
+        y "They're still here. Better than just the two of us."
 
         t "Yeah."
 
@@ -464,7 +464,7 @@ label trendy_bad_ending:
 
     centered "Nobody remembers what the original post was about."
 
-    centered "One exhausted duck has written a twelve-part response thread."
+    centered "One exhausted otter has written a twelve-part response thread."
 
     pause 3.0
 
@@ -514,7 +514,7 @@ label spendy_intro:
 
     y "I considered it."
 
-    p "Yinny."
+    p "Yinny!"
 
     y "I didn't!"
 
@@ -574,7 +574,7 @@ label spendy_water_investigation:
 
     y "I hate it."
 
-    p "You'll survive."
+    p "You'll be fine."
 
     jump spendy_solutions
 
@@ -633,7 +633,7 @@ label spendy_solutions:
 
             y "But look at those specifications."
 
-            p "It has decorative laser koi."
+            p "It has a decorative laser engraving of a koi fish on it..."
 
             y "Exactly."
 
@@ -691,7 +691,7 @@ label spendy_solutions:
 
             p "Helping people see a problem isn't the same as fixing its source."
 
-        "Build a fountain show for 'water awareness' — Cost: 60 | Improvement: +5":
+        "Build a fountain to show for 'water awareness' — Cost: 60 | Improvement: +5":
             $ city_budget -= 60
             $ water_quality += 5
 
@@ -699,7 +699,7 @@ label spendy_solutions:
 
             p "We have purchased synchronized water jets."
 
-            y "Educational synchronized water jets."
+            y "'Educational' synchronized water jets."
 
             p "The polluted pipe is twenty metres away."
 
@@ -787,7 +787,7 @@ label spendy_solutions:
 
             y "Essential."
 
-            p "It is a valve, Yinny."
+            p "It is a valve, Yinny. Not a disco rave."
 
     if city_budget < 0:
         jump spendy_bad_ending
@@ -810,7 +810,7 @@ label spendy_resolution:
 
         "The difference is visible."
 
-        "There is less debris along the bank, and the cloudy sheen has begun to disappear."
+        "There is less debris along the bank, and the cloudy sheen has began to disappear."
 
     else:
 
@@ -909,7 +909,7 @@ label spendy_bad_ending:
 
     centered "The environmental upgrades are excellent."
 
-    centered "Unfortunately, the city now has negative money."
+    centered "Unfortunately, the city no longer has a budget for long term maintenance. Even in debt in some aspects."
 
     show spendy sad at spendy_right
 
@@ -976,7 +976,7 @@ label act1_end:
 
     "A breeze moves through the city."
 
-    "For once, it does not carry the smell of a nearby garbage pile."
+    "For once, it does not carry the smell of garbage."
 
     y "Huge improvement."
 
@@ -986,7 +986,7 @@ label act1_end:
 
     "The ground vibrates slightly."
 
-    y "That didn't sound environmentally friendly."
+    y "That doesn't sound environmentally friendly."
 
     "Another distant rumble follows."
 
@@ -1005,6 +1005,6 @@ label act1_end:
 
     pause 2.0
 
-    return
+    jump act2_sparky
 
 
