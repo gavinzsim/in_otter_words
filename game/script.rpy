@@ -11,6 +11,7 @@ image bg bathroom = "images/bathroom.png"
 image bg campus = "images/campus.png"
 image bg bedroom = "images/yinny_bedroom.png"
 image bg livingroom = "images/act4_living.jpg"
+image lab = "images/normal_stormy_lab.png"
 
 # Characters
 image yinny = "images/yinny.webp"
@@ -433,6 +434,7 @@ label act4:
 
     show StormyNormal
     s "As always, I'm all alone." 
+    
     s "I just wanted to show everyone my talent."
 
     "He hops on the couch and cuddles with a strange new plushie"
@@ -443,7 +445,6 @@ label act4:
     "ding dong, ding dong"
 
     s "wait who's here?"
-
 
     s "I'm coming!"
     "Stormy wipes his tears and rushes to the door."
@@ -481,35 +482,92 @@ label act4:
 
     s "Don't worry, I have it all under control. Come with me I'll show you!!"
 
+    menu:
+        "Not Really":
+            y "Sorry dude, I'm not really a science guy"
+
+            s "oh...guess I'll just go back to my room and cry myself to sleep"
+
+            y "Uh wait I mean of course I will!"
+
+            s "REALLY?? YAY!!! Let's Go!"
+
+            jump Act4_Part2
+        "Of course!":
+            y "Yeah let's do it!"
+
+            s "Yippie!! Finally, someone to show it to! Let's go!"
+
+            y "Wait you couldn't show it to anyone else? What about Sparky?"
+
+            s "Um...let's not talk about that right now. I just want to show you my machine!"
+
+            jump Act4_Part2
+    
+    #Act4 Part 2
+label Act4_Part2:
+
+    scene bg lab
+    show StormyNormal
     "Stormy grabs Yinny and rushes to the machine"
-
+    
     s "I've been working on this for days."
-
+    
     y "Days?"
-
+    
     s "Yes!"
-
+    
     s "I barely slept. I was on a strict deadline. It had to be done by the end of today."
-
+    
     y "Stormy..."
-
+    
     s "I know! I know!"
-
+    
     s "But look!"
-
+    
     s "The prototype is almost complete."
+    
+    y "What are you making?"
 
-    y "Almost?"
+    s "Okay. Remember when I found you under a pile of garbage a while ago?"
 
+    
     s "I'm missing a few components."
-
+    
     y "And you were going to build this thing by yourself?"
-
-    st "Of course."
-
+    
+    s "Of course."
+    
     y "Why?"
+    
+    s "Because I know what I'm doing."
+    
+    "..."
+    
+    y "Do you?"
+    
+    s "..."
+    
+    s "Mostly"
 
-    st "Because I know what I'm doing."
+    y "Why haven't you asked for help? I feel like this isn't something you should do alone"
 
+    s "I don't need help."
+
+    y "Stormy."
+
+    s "..."
+
+    menu: 
+        "I should help him"
+            y: "Stormy you can't do this alone. You're stressing yourself out and it's affecting your health and your relationship."
+            y: "yes"
+    y "You need help."
+
+    s "Fine."
+
+    s "But only because this experiment is extremely important."
+
+    jump arc4_team_arrives  
 
     return
