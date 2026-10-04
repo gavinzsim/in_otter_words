@@ -10,10 +10,18 @@ image bg city = "images/city.png"
 image bg bathroom = "images/bathroom.png"
 image bg campus = "images/campus.png"
 image bg bedroom = "images/bedroom.png"
+image bg livingroom = "images/act4_living.jpg"
 
 # Characters
-image yinny = "images/yinny_otter.png"
-image stormy = "images/Stormy_Normal.png"
+image yinny = "images/yinny.webp"
+image stormy = "images/stormy.webp"
+image StormyAnnoyedSpeaking = "images/StormyAnnoyedSpeaking.png"
+image StormyAnnoyed = "images/StormyAnnoyed.png"
+image StormyHappy = "images/StormyHappy.png"
+image StormyHappySpeaking = "images/Stormy_Happy_Speaking.png"
+image StormyNormal = "images/Stormy_Normal.png"
+image StormySpeaking = "images/Stormy_Speaking.png"
+image StormyShocked = "images/Stormy_Shocked.png"
 image garbage_pile = "images/garbage_pile.png"
 
 # Yinny's canvas includes visual space beneath her feet; offset it downward so
@@ -31,6 +39,7 @@ transform stormy_right:
     xalign 1.0
     yalign 1.0
     zoom 0.7
+
 
 # VARIABLES
 
@@ -411,7 +420,41 @@ label main_story:
     # jump trendy_arc
 
     centered "End of Opening Demo"
+    jump act4
 
-    return
+#Placeholder for Act 4
+# The game starts here.
+
+label act4:
+    scene bg livingroom
+    with fade
+
+    "Stormy sobs loudly as he runs away from his completed experiment."
+
+    show StormyNormal
+    s "As always, I'm all alone." 
+    s "I just wanted to show everyone my talent."
+
+    "He hops on the couch and cuddles with a strange new plushie"
+
+    s "But of course no one actually cares."
+    "Stormy continues to cry himself to sleep"
+    
+    "ding dong, ding dong"
+
+    s "wait who's here?"
+
+
+    s "I'm coming!"
+    "Stormy wipes his tears and rushes to the door."
+
+    s "Sniff sniff who's here"
+
+    "Stormy opens the door and sees a familiar face."
+
+    y "Hey I hope it's okay if I barge in here randomly."
+
+
+
 
     return
