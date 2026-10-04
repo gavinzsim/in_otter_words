@@ -21,6 +21,8 @@ image StormyHappy = "images/StormyHappy.png"
 image StormyHappySpeaking = "images/Stormy_Happy_Speaking.png"
 image StormyNormal = "images/Stormy_Normal.png"
 image StormySpeaking = "images/Stormy_Speaking.png"
+image 
+
 
 # VARIABLES
 
@@ -395,7 +397,8 @@ label act4:
     with fade
 
     "Stormy sobs loudly as he runs away from his completed experiment."
-    
+
+    show StormyNormal
     s "As always, I'm all alone." 
     s "I just wanted to show everyone my talent."
 
@@ -403,7 +406,7 @@ label act4:
 
     s "But of course no one actually cares."
     "Stormy continues to cry himself to sleep"
-
+    
     "ding dong, ding dong"
 
     s "wait who's here?"
@@ -417,6 +420,8 @@ label act4:
     "Stormy opens the door and sees a familiar face."
 
     y "Hey I hope it's okay if I barge in here randomly."
+
+
 
 
     return
