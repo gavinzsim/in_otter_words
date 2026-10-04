@@ -38,8 +38,7 @@ Each optional snooze adds one recorded decision and two possible points, up to
 the story early, so the score context uses the range for choices actually
 encountered in a given run. The LLM decides the future from the whole context.
 
-For local verification, run Ren'Py lint, `tests/check_finale.py` using the
-Ren'Py SDK's Python executable, and the engine testcases
+For local verification, run Ren'Py lint and the engine testcases
 `renpy.exe <project> test finale_fallback_render` and
 `renpy.exe <project> test finale_generated_render`. In the developer console, call
 `debug_finale_state()` to log current scoring, relationships, traits, and choices.

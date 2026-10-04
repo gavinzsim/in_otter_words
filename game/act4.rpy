@@ -47,7 +47,7 @@ label act4:
     show StormyShocked at right
     s "Yinny! You came!"
 
-    show yinny at left
+    show yinny at yinny_left
     y "Yeah, I came over. What are you working on?"
 
     hide StormyShocked                    
@@ -87,6 +87,7 @@ label act4:
 
 label act4_part2:
     scene bg lab
+    show yinny at yinny_left
     show StormyNormal
 
     "Stormy grabs Yinny and rushes to the machine."
@@ -129,6 +130,7 @@ label act4_part2:
 
 label act4_part3:
     scene bg lab
+    show yinny at yinny_left
 
     show SparkyHappy at center
     sp "I never said anything about hating you, Stormy. Don't put words in my mouth."
@@ -163,6 +165,7 @@ label act4_part3:
 
 label building_minigame:
     scene bg lab
+    show yinny at yinny_left
     show StormyHappySpeaking
     s "Okay, so here's the plan! I need you all to focus and help me finish this project!"
     s "We need three components, so I need you guys to grab the right ones for me, okay?"
@@ -194,6 +197,7 @@ label building_minigame:
 
 label second_component:
     scene bg lab
+    show yinny at yinny_left
     s "Now we need something to stabilize the machine. This lets us make sure no garbage can fall out either!"
     y "Got it."
 
@@ -220,6 +224,7 @@ label second_component:
 
 label third_component:
     scene bg lab
+    show yinny at yinny_left
     s "One final component."
     s "This one is important."
     y "What does it do?"
@@ -255,6 +260,7 @@ label machine_ready:
     scene bg lab
     with dissolve
 
+    show yinny at yinny_left
     show StormyHappySpeaking
     s "Alright, everyone!"
     s "It's ready!"
@@ -287,6 +293,7 @@ label stormy_good_ending:
     scene bg lab
     with fade
 
+    show yinny at yinny_left
     show StormyHappySpeaking
     s "It's working!"
     sp "WE DID IT!"
@@ -313,6 +320,7 @@ label otter_disaster:
     scene bg lab
     with vpunch
 
+    show yinny at yinny_left
     s "Uh..."
     y "Stormy?"
     s "That sounds really bad..."
@@ -339,6 +347,7 @@ label otter_disaster:
     "..."
 
     scene bg bad lab
+    show yinny at yinny_left
     show StormySad
     s "..."
     y "..."

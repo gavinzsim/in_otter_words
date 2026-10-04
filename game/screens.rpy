@@ -13,6 +13,11 @@ style default:
     properties gui.text_properties()
     language gui.language
 
+style centered_text:
+    color "#fff8de"
+    size 44
+    outlines [(3, "#173e39", 0, 0)]
+
 style input:
     properties gui.text_properties("input", accent=True)
     adjust_spacing False
@@ -27,6 +32,11 @@ style gui_text:
 
 style button:
     properties gui.button_properties("button")
+    background Frame("gui/otter/button_idle.png", Borders(28, 28, 28, 28))
+    hover_background Frame("gui/otter/button_hover.png", Borders(28, 28, 28, 28))
+    selected_background Frame("gui/otter/button_selected.png", Borders(28, 28, 28, 28))
+    xpadding 20
+    ypadding 8
 
 style button_text is gui_text:
     properties gui.text_properties("button")
@@ -57,13 +67,14 @@ style scrollbar:
 
 style vscrollbar:
     xsize gui.scrollbar_size
-    base_bar Frame("gui/scrollbar/vertical_[prefix_]bar.png", gui.vscrollbar_borders, tile=gui.scrollbar_tile)
-    thumb Frame("gui/scrollbar/vertical_[prefix_]thumb.png", gui.vscrollbar_borders, tile=gui.scrollbar_tile)
+    base_bar Solid("#cbdccb")
+    thumb Solid("#3e8677")
 
 style slider:
     ysize gui.slider_size
-    base_bar Frame("gui/slider/horizontal_[prefix_]bar.png", gui.slider_borders, tile=gui.slider_tile)
-    thumb "gui/slider/horizontal_[prefix_]thumb.png"
+    left_bar Frame("gui/otter/bar_filled.png", Borders(18, 18, 18, 18))
+    right_bar Frame("gui/otter/bar_empty.png", Borders(18, 18, 18, 18))
+    thumb "gui/otter/bar_thumb.png"
 
 style vslider:
     xsize gui.slider_size
@@ -72,8 +83,8 @@ style vslider:
 
 
 style frame:
-    padding gui.frame_borders.padding
-    background Frame("gui/frame.png", gui.frame_borders, tile=gui.frame_tile)
+    padding (24, 20)
+    background Frame("gui/otter/content_panel.png", Borders(30, 30, 30, 30))
 
 
 
@@ -135,7 +146,8 @@ style window:
     yalign gui.textbox_yalign
     ysize gui.textbox_height
 
-    background Image("gui/textbox.png", xalign=0.5, yalign=1.0)
+    background Frame("gui/otter/dialogue_panel.png", Borders(30, 30, 30, 30))
+    xmargin 68
 
 style namebox:
     xpos gui.name_xpos
@@ -144,13 +156,15 @@ style namebox:
     ypos gui.name_ypos
     ysize gui.namebox_height
 
-    background Frame("gui/namebox.png", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
-    padding gui.namebox_borders.padding
+    background Frame("gui/otter/name_panel.png", Borders(30, 30, 30, 30))
+    xpadding 30
+    ypadding 8
 
 style say_label:
     properties gui.text_properties("name", accent=True)
     xalign gui.name_xalign
     yalign 0.5
+    color "#fff8dd"
 
 style say_dialogue:
     properties gui.text_properties("dialogue")
@@ -218,16 +232,21 @@ style choice_button_text is button_text
 
 style choice_vbox:
     xalign 0.5
-    ypos 405
-    yanchor 0.5
+    yalign 0.48
 
     spacing gui.choice_spacing
 
 style choice_button is default:
     properties gui.button_properties("choice_button")
+    background Frame("gui/otter/button_idle.png", Borders(30, 30, 30, 30))
+    hover_background Frame("gui/otter/button_hover.png", Borders(30, 30, 30, 30))
+    xpadding 40
+    ypadding 20
 
 style choice_button_text is default:
     properties gui.text_properties("choice_button")
+    textalign 0.5
+    layout "subtitle"
 
 
 ## Quick Menu screen ###########################################################
@@ -270,12 +289,23 @@ style quick_button_text is button_text
 style quick_menu:
     xalign 0.5
     yalign 1.0
+    yoffset -10
+    spacing 4
 
 style quick_button:
     properties gui.button_properties("quick_button")
+    background Frame("gui/otter/quick_idle.png", Borders(24, 24, 24, 24))
+    hover_background Frame("gui/otter/quick_hover.png", Borders(24, 24, 24, 24))
+    xpadding 16
+    ypadding 7
 
 style quick_button_text:
     properties gui.text_properties("quick_button")
+    color "#e9f6e8"
+    idle_color "#e9f6e8"
+    hover_color "#ffffff"
+    selected_color "#ffffff"
+    insensitive_color "#c3d8cdaa"
 
 
 ################################################################################
@@ -293,7 +323,7 @@ screen navigation():
         style_prefix "navigation"
 
         xpos gui.navigation_xpos
-        yalign 0.5
+        ypos 245
 
         spacing gui.navigation_spacing
 
@@ -339,9 +369,19 @@ style navigation_button_text is gui_button_text
 style navigation_button:
     size_group "navigation"
     properties gui.button_properties("navigation_button")
+    xsize 300
+    ysize 62
+    background Frame("gui/otter/menu_button_idle.png", Borders(30, 30, 30, 30))
+    hover_background Frame("gui/otter/menu_button_hover.png", Borders(30, 30, 30, 30))
+    selected_background Frame("gui/otter/button_selected.png", Borders(30, 30, 30, 30))
+    xpadding 25
 
 style navigation_button_text:
     properties gui.text_properties("navigation_button")
+    color "#1b5149"
+    hover_color "#123b36"
+    selected_color "#164a43"
+    size 29
 
 
 ## Main Menu screen ############################################################
@@ -356,25 +396,50 @@ screen main_menu():
     tag menu
 
     add gui.main_menu_background
+    add Solid("#103b395c")
+    add "images/yinny_otter.png" xalign 0.87 yalign 0.95 zoom 0.73
 
-    ## This empty frame darkens the main menu.
     frame:
-        style "main_menu_frame"
-
-    ## The use statement includes another screen inside this one. The actual
-    ## contents of the main menu are in the navigation screen.
-    use navigation
-
-    if gui.show_name:
+        background Frame("gui/otter/menu_panel.png", Borders(32, 32, 32, 32))
+        xpos 72
+        ypos 58
+        xsize 650
+        ysize 960
+        xpadding 66
+        ypadding 62
 
         vbox:
-            style "main_menu_vbox"
+            spacing 16
+            text _("IN OTTER\nWORDS"):
+                font "gui/fonts/Quicksand-Bold.ttf"
+                size 88
+                line_spacing -10
+                color "#fff8de"
+            text _("A little change makes waves."):
+                size 27
+                color "#cfe7cf"
+            null height 34
+            textbutton _("Start") action Start() style "main_navigation_button"
+            textbutton _("Load") action ShowMenu("load") style "main_navigation_button"
+            textbutton _("Preferences") action ShowMenu("preferences") style "main_navigation_button"
+            textbutton _("About") action ShowMenu("about") style "main_navigation_button"
+            if renpy.variant("pc"):
+                textbutton _("Quit") action Quit(confirm=False) style "main_navigation_button"
 
-            text "[config.name!t]":
-                style "main_menu_title"
+    text _("A story about making a splash"):
+        xalign 0.86
+        yalign 0.92
+        size 29
+        color "#fff8de"
+        outlines [(2, "#17423b", 0, 0)]
 
-            text "[config.version]":
-                style "main_menu_version"
+style main_navigation_button is navigation_button:
+    xsize 500
+    ysize 70
+
+style main_navigation_button_text is navigation_button_text:
+    size 34
+    xalign 0.5
 
 
 style main_menu_frame is empty
@@ -419,59 +484,47 @@ screen game_menu(title, scroll=None, yinitial=0.0, spacing=0):
 
     style_prefix "game_menu"
 
-    if main_menu:
-        add gui.main_menu_background
-    else:
-        add gui.game_menu_background
+    add gui.game_menu_background
+    add Solid("#103b39c8")
 
     frame:
-        style "game_menu_outer_frame"
+        style "game_menu_navigation_frame"
 
-        hbox:
+    text _("IN OTTER\nWORDS"):
+        xpos 96
+        ypos 100
+        font "gui/fonts/Quicksand-Bold.ttf"
+        size 37
+        line_spacing -5
+        color "#fff8de"
 
-            ## Reserve space for the navigation section.
-            frame:
-                style "game_menu_navigation_frame"
+    frame:
+        style "game_menu_content_frame"
 
-            frame:
-                style "game_menu_content_frame"
-
-                if scroll == "viewport":
-
-                    viewport:
-                        yinitial yinitial
-                        scrollbars "vertical"
-                        mousewheel True
-                        draggable True
-                        pagekeys True
-
-                        side_yfill True
-
-                        vbox:
-                            spacing spacing
-
-                            transclude
-
-                elif scroll == "vpgrid":
-
-                    vpgrid:
-                        cols 1
-                        yinitial yinitial
-
-                        scrollbars "vertical"
-                        mousewheel True
-                        draggable True
-                        pagekeys True
-
-                        side_yfill True
-
-                        spacing spacing
-
-                        transclude
-
-                else:
-
+        if scroll == "viewport":
+            viewport:
+                yinitial yinitial
+                scrollbars "vertical"
+                mousewheel True
+                draggable True
+                pagekeys True
+                side_yfill True
+                vbox:
+                    spacing spacing
                     transclude
+        elif scroll == "vpgrid":
+            vpgrid:
+                cols 1
+                yinitial yinitial
+                scrollbars "vertical"
+                mousewheel True
+                draggable True
+                pagekeys True
+                side_yfill True
+                spacing spacing
+                transclude
+        else:
+            transclude
 
     use navigation
 
@@ -506,16 +559,24 @@ style game_menu_outer_frame:
     background "gui/overlay/game_menu.png"
 
 style game_menu_navigation_frame:
-    xsize 420
-    yfill True
+    xpos 55
+    ypos 55
+    xsize 370
+    ysize 970
+    background Frame("gui/otter/menu_panel.png", Borders(32, 32, 32, 32))
 
 style game_menu_content_frame:
-    left_margin 60
-    right_margin 30
-    top_margin 15
+    xpos 445
+    ypos 55
+    xsize 1420
+    ysize 970
+    xpadding 48
+    top_padding 145
+    bottom_padding 48
+    background Frame("gui/otter/content_panel.png", Borders(32, 32, 32, 32))
 
 style game_menu_viewport:
-    xsize 1380
+    xsize 1310
 
 style game_menu_vscrollbar:
     unscrollable gui.unscrollable
@@ -524,18 +585,19 @@ style game_menu_side:
     spacing 15
 
 style game_menu_label:
-    xpos 75
-    ysize 180
+    xpos 500
+    ypos 95
+    ysize 90
 
 style game_menu_label_text:
-    size 75
+    size 64
     color gui.accent_color
     yalign 0.5
 
 style return_button:
     xpos gui.navigation_xpos
     yalign 1.0
-    yoffset -45
+    yoffset -90
 
 
 ## About screen ################################################################
@@ -712,15 +774,34 @@ style page_label_text:
 
 style page_button:
     properties gui.button_properties("page_button")
+    background Frame("gui/otter/button_idle.png", Borders(28, 28, 28, 28))
+    hover_background Frame("gui/otter/button_hover.png", Borders(28, 28, 28, 28))
+    selected_background Frame("gui/otter/button_selected.png", Borders(28, 28, 28, 28))
+    xpadding 16
+    ypadding 5
 
 style page_button_text:
     properties gui.text_properties("page_button")
 
 style slot_button:
     properties gui.button_properties("slot_button")
+    background Frame("gui/otter/slot_idle.png", Borders(28, 28, 28, 28))
+    hover_background Frame("gui/otter/slot_hover.png", Borders(28, 28, 28, 28))
+    xpadding 8
+    ypadding 8
 
 style slot_button_text:
     properties gui.text_properties("slot_button")
+    color "#254b43"
+    hover_color "#174f46"
+
+style slot_time_text:
+    size 20
+    color "#315b52"
+
+style slot_name_text:
+    size 21
+    color "#20483f"
 
 
 ## Preferences screen ##########################################################
@@ -845,14 +926,18 @@ style pref_label_text:
     yalign 1.0
 
 style pref_vbox:
-    xsize 338
+    xsize 300
 
 style radio_vbox:
     spacing gui.pref_button_spacing
 
 style radio_button:
     properties gui.button_properties("radio_button")
-    foreground "gui/button/radio_[prefix_]foreground.png"
+    background Frame("gui/otter/button_idle.png", Borders(28, 28, 28, 28))
+    hover_background Frame("gui/otter/button_hover.png", Borders(28, 28, 28, 28))
+    selected_background Frame("gui/otter/button_selected.png", Borders(28, 28, 28, 28))
+    xpadding 20
+    ypadding 8
 
 style radio_button_text:
     properties gui.text_properties("radio_button")
@@ -862,13 +947,17 @@ style check_vbox:
 
 style check_button:
     properties gui.button_properties("check_button")
-    foreground "gui/button/check_[prefix_]foreground.png"
+    background Frame("gui/otter/button_idle.png", Borders(28, 28, 28, 28))
+    hover_background Frame("gui/otter/button_hover.png", Borders(28, 28, 28, 28))
+    selected_background Frame("gui/otter/button_selected.png", Borders(28, 28, 28, 28))
+    xpadding 20
+    ypadding 8
 
 style check_button_text:
     properties gui.text_properties("check_button")
 
 style slider_slider:
-    xsize 525
+    xsize 485
 
 style slider_button:
     properties gui.button_properties("slider_button")
@@ -879,7 +968,7 @@ style slider_button_text:
     properties gui.text_properties("slider_button")
 
 style slider_vbox:
-    xsize 675
+    xsize 625
 
 
 ## History screen ##############################################################
@@ -945,6 +1034,9 @@ style history_label_text is gui_label_text
 style history_window:
     xfill True
     ysize gui.history_height
+    background Frame("gui/otter/button_idle.png", Borders(28, 28, 28, 28))
+    xpadding 20
+    ypadding 18
 
 style history_name:
     xpos gui.history_name_xpos
@@ -955,6 +1047,8 @@ style history_name:
 style history_name_text:
     min_width gui.history_name_width
     textalign gui.history_name_xalign
+    color "#206a5c"
+    bold True
 
 style history_text:
     xpos gui.history_text_xpos
@@ -964,6 +1058,7 @@ style history_text:
     min_width gui.history_text_width
     textalign gui.history_text_xalign
     layout ("subtitle" if gui.history_text_xalign else "tex")
+    color "#29433b"
 
 style history_label:
     xfill True
@@ -1186,8 +1281,8 @@ style confirm_button is gui_medium_button
 style confirm_button_text is gui_medium_button_text
 
 style confirm_frame:
-    background Frame([ "gui/confirm_frame.png", "gui/frame.png"], gui.confirm_frame_borders, tile=gui.frame_tile)
-    padding gui.confirm_frame_borders.padding
+    background Frame("gui/otter/content_panel.png", Borders(32, 32, 32, 32))
+    padding (65, 52)
     xalign .5
     yalign .5
 
@@ -1197,6 +1292,8 @@ style confirm_prompt_text:
 
 style confirm_button:
     properties gui.button_properties("confirm_button")
+    background Frame("gui/otter/button_idle.png", Borders(28, 28, 28, 28))
+    hover_background Frame("gui/otter/button_hover.png", Borders(28, 28, 28, 28))
 
 style confirm_button_text:
     properties gui.text_properties("confirm_button")
