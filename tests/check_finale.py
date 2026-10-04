@@ -31,8 +31,10 @@ def environment(save_dir):
         decision_log=[], total_decision_score=0,
         relationship_scores=dict.fromkeys(("Trendy", "Spendy", "Sparky", "Stormy"), 0),
         trait_scores=dict.fromkeys(("awareness", "practicality", "optimism", "responsibility", "community", "innovation"), 0),
-        river_cleanup_score=17, correct_tools=0, wrong_tools=0, safety=0, teamwork=0,
+        river_cleanup_score=17, river_cleanup_trash_collected=19,
+        river_cleanup_animals_clicked=2, correct_tools=0, wrong_tools=0, safety=0, teamwork=0,
         finale_machine_outcome="prototype_broke_after_unsafe_build",
+        openrouter_key=None,
         community_support=0, water_quality=35, city_budget=20, water_solution="cheap",
         sparky_bond=0, cynicism=0,
     )
@@ -63,10 +65,19 @@ def main():
         best = play(ns, best_picks)
         assert (best["scoring"]["actual_score"], best["scoring"]["best_possible_score"]) == (32, 32)
         assert best["scoring"]["scored_decisions"] == 16
-        assert best["scoring"]["assessment"] == "high"
+        assert best["scoring"]["best_choices"] == 16
+        assert best["scoring"]["okay_choices"] == 0
+        assert best["scoring"]["worst_choices"] == 0
         assert best["relationships"]["Stormy"] > 0
         assert best["minigames"][0]["score"] == 17
-        assert len(ns["build_fallback_finale"](best)["scenes"]) == 8
+        assert best["minigames"][0]["trash_collected"] == 19
+        assert best["minigames"][0]["animals_accidentally_clicked"] == 2
+        assert best["character_context"]["Trendy"]["choices_with_yinny"]
+        assert best["environmental_outcomes_so_far"]["machine"]
+        assert best["behavior_patterns"]
+        assert not any("strongest in" in pattern for pattern in best["behavior_patterns"])
+        assert all(item["consequence"] and item["situation"] for item in best["decisions"])
+        assert len(ns["build_fallback_finale"](best)["scenes"]) == 5
         assert ns["write_finale_context"](best) == str(pathlib.Path(save_dir) / "finale_context.json")
         assert json.loads((pathlib.Path(save_dir) / "finale_context.json").read_text(encoding="utf-8")) == best
         restored_store = pickle.loads(pickle.dumps(store))
@@ -78,10 +89,14 @@ def main():
         story_text = "\n".join(path.read_text(encoding="utf-8") for path in story_files)
         assert story_text.count("menu:") == len(ns["DECISION_CATALOG"]) == 16
         assert story_text.count("$ record_decision(") == sum(len(item["options"]) for item in ns["DECISION_CATALOG"].values()) == 38
+        assert all(set(item["options"]) == set(ns["DECISION_CONSEQUENCES"][key])
+                   for key, item in ns["DECISION_CATALOG"].items())
         declared = {}
         for match in re.finditer(r'^image (.+?) = "(images/[^"]+)"', story_text, re.MULTILINE):
             declared[match.group(1)] = match.group(2)
-        for image_name in list(ns["FINALE_BACKGROUNDS"].values()) + [item[0] for item in ns["FINALE_SPRITES"].values()]:
+        images = list(ns["FINALE_BACKGROUNDS"].values())
+        images += [pose for variants in ns["FINALE_EXPRESSIONS"].values() for pose in variants.values()]
+        for image_name in images:
             assert image_name in declared, image_name
             assert (GAME / declared[image_name]).is_file(), image_name
 
@@ -90,8 +105,9 @@ def main():
                                ("spendy_water_solution", "screens"), ("sparky_listen", "decline"),
                                ("stormy_sorting", "sort")))
         assert mixed["scoring"]["actual_score"] == 6
-        assert mixed["scoring"]["assessment"] == "mixed"
-        assert "mess" in ns["build_fallback_finale"](mixed)["reflection"]
+        assert (mixed["scoring"]["best_choices"], mixed["scoring"]["okay_choices"],
+                mixed["scoring"]["worst_choices"]) == (2, 2, 1)
+        assert ns["build_fallback_finale"](mixed) == ns["build_fallback_finale"](best)
 
         # This low route can pass the existing Act 1 and Act 3 ending gates.
         ns, store, logs = environment(save_dir)
@@ -108,19 +124,35 @@ def main():
         low = play(ns, low_route)
         assert low["scoring"]["actual_score"] == 11
         assert low["scoring"]["best_possible_score"] == 36
-        assert low["scoring"]["assessment"] == "low"
-        assert "rushed choices" in ns["build_fallback_finale"](low)["reflection"]
+        assert low["scoring"]["percentage"] < 33.3
+        assert ns["build_fallback_finale"](low) == ns["build_fallback_finale"](best)
         ns["record_decision"]("wake_up_alarm", "snooze", 1)
         assert len(store.decision_log) == 18  # Revisiting a label never double counts.
         assert json.loads(json.dumps(low))["decisions"] == low["decisions"]
+
+        # Equal overall scores still yield distinct character and behavior context.
+        other_ns, _, _ = environment(save_dir)
+        route_a = play(other_ns, picks(("trendy_campaign_focus", "invite"),
+                                       ("spendy_water_solution", "aqua_sovereign")))
+        another_ns, _, _ = environment(save_dir)
+        route_b = play(another_ns, picks(("trendy_campaign_focus", "blame"),
+                                         ("spendy_water_solution", "modular")))
+        assert route_a["scoring"]["actual_score"] == route_b["scoring"]["actual_score"] == 2
+        assert route_a["character_context"] != route_b["character_context"]
+        assert route_a["behavior_patterns"] != route_b["behavior_patterns"]
 
         # Missing key and malformed API JSON both choose the local finale.
         prior_key = os.environ.get("OPENROUTER_API_KEY")
         prior_urlopen = ns["urllib"].request.urlopen
         try:
             os.environ.pop("OPENROUTER_API_KEY", None)
-            assert ns["generate_finale"](low)["ending_title"] == "The Next Small Step"
+            assert ns["generate_finale"](low)["ending_title"] == "The Story Continues"
+            store.openrouter_key = "local-test-secret"
+            assert ns["load_openrouter_key"]() == "local-test-secret"
             os.environ["OPENROUTER_API_KEY"] = "test-secret"
+            assert ns["load_openrouter_key"]() == "local-test-secret"
+            store.openrouter_key = None
+            assert ns["load_openrouter_key"]() == "test-secret"
 
             class InvalidResponse:
                 status = 200
@@ -132,7 +164,7 @@ def main():
                     return b'{"choices":[{"message":{"content":"{broken"}}]}'
 
             def fake_urlopen(request, timeout):
-                assert timeout == 12
+                assert timeout == 90
                 assert request.full_url == ns["OPENROUTER_FINALE_URL"]
                 payload = json.loads(request.data)
                 assert payload["model"] == "z-ai/glm-5.3-flash"
@@ -141,8 +173,19 @@ def main():
                 return InvalidResponse()
 
             ns["urllib"].request.urlopen = fake_urlopen
-            assert ns["generate_finale"](low)["ending_title"] == "The Next Small Step"
+            assert ns["generate_finale"](low)["ending_title"] == "The Story Continues"
             assert not any("test-secret" in line for line in logs)
+
+            valid = {"ending_title": "A Different Future", "summary": "The city changes in unexpected ways.",
+                     "scenes": [{"background": "park", "characters": ["Yinny", "Trendy"],
+                                 "speaker": "Trendy", "expression": "happy",
+                                 "text": "Remember our cleanup?"} for _ in range(8)],
+                     "final_line": "There was still another day to shape."}
+            class ValidResponse(InvalidResponse):
+                def read(self, amount):
+                    return json.dumps({"choices": [{"message": {"content": json.dumps(valid)}}]}).encode("utf-8")
+            ns["urllib"].request.urlopen = lambda request, timeout: ValidResponse()
+            assert ns["generate_finale"](low)["ending_title"] == "A Different Future"
         finally:
             ns["urllib"].request.urlopen = prior_urlopen
             if prior_key is None:
@@ -151,15 +194,20 @@ def main():
                 os.environ["OPENROUTER_API_KEY"] = prior_key
 
         scene = {"background": "../../private", "characters": ["Yinny", "Alien"],
-                 "speaker": "Alien", "text": "Look [secret] {tag}!"}
-        data = {"ending_title": "Ripples", "tone": "mixed", "reflection": "A small start.",
-                "scenes": [copy.deepcopy(scene) for _ in range(8)], "closing_message": "Keep going."}
+                 "speaker": "Alien", "expression": "shocked", "text": "Look [secret] {tag}!"}
+        data = {"ending_title": "Ripples", "summary": "A complicated future.",
+                "scenes": [copy.deepcopy(scene) for _ in range(8)], "final_line": "Keep going."}
         validated = ns["validate_finale"](data)
         assert validated["scenes"][0]["background"] == "park"
         assert validated["scenes"][0]["characters"] == ["Yinny"]
         assert validated["scenes"][0]["speaker"] == "Narrator"
         assert "[" not in validated["scenes"][0]["text"]
-    print("Finale checks passed: menu coverage, assets, best, mixed, reachable low, save state, JSON, request, fallback, invalid visuals, dedup.")
+        assert ns["resolve_finale_background"]("clean_city_sunset") == "clean_city"
+        assert ns["resolve_finale_background"]("broken_lab") == "damaged_lab"
+        # A valid model response is returned unchanged in direction and title.
+        ns["request_openrouter_finale"] = lambda context: validated
+        assert ns["generate_finale"](low)["ending_title"] == "Ripples"
+    print("Finale checks passed: context depth, choice counts, menu coverage, assets, varied scores, one fallback, save state, JSON, request, invalid visuals, dedup.")
 
 
 if __name__ == "__main__":

@@ -2,21 +2,25 @@
 init python:
     def test_generated_response(context):
         scene = {"background": "untrusted/path", "characters": ["Yinny", "Stormy", "Sparky"],
-                 "speaker": "Unknown", "text": "The next safe step belongs to all of us."}
-        return validate_finale({"ending_title": "A Shared Start", "tone": "hopeful",
-                                "reflection": "Yinny thinks about the team's work.",
+                 "speaker": "Unknown", "expression": "happy",
+                 "text": "The next safe step belongs to all of us."}
+        return validate_finale({"ending_title": "A Shared Start", "summary": "The team imagines a shared future.",
                                 "scenes": [dict(scene) for _ in range(8)],
-                                "closing_message": "Keep making small changes together."})
+                                "final_line": "Keep making small changes together."})
 
 testcase finale_fallback_render:
     $ os.environ.pop("OPENROUTER_API_KEY", None)
+    $ store.openrouter_key = None
+    assert eval load_openrouter_key() is None
     run Jump("finale")
     advance until "The End" timeout 30.0
     assert eval finale_result is not None
-    assert eval len(finale_result["scenes"]) == 8
+    assert eval len(finale_result["scenes"]) == 5
     exit
 
 testcase finale_generated_render:
+    $ store.openrouter_key = "test-local-key"
+    assert eval load_openrouter_key() == "test-local-key"
     $ request_openrouter_finale = test_generated_response
     run Jump("finale")
     advance until "The End" timeout 30.0

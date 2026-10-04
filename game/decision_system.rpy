@@ -74,6 +74,71 @@ init python:
             "skip": decision_option("worst", "Yinny skipped the machine's sorting and safety system to finish faster.", {"Stormy": -1}, {"responsibility": -1, "innovation": -1})}},
     }
     TIER_POINTS = {"best": 2, "okay": 1, "worst": 0}
+    ARC_CHARACTERS = {"opening": "Stormy", "act_1": "Trendy", "act_2": "Spendy",
+                      "act_3": "Sparky", "act_4": "Stormy"}
+    DECISION_CONSEQUENCES = {
+        "wake_up_alarm": {
+            "get_up": "Yinny left the bedroom and encountered the city's pollution.",
+            "snooze": "The alarm rang again; a third snooze ends Yinny's day before the main story."},
+        "help_garbage_problem": {
+            "help": "Stormy introduced Yinny to friends who were already working on local problems.",
+            "ignore": "Stormy was disappointed and Yinny walked away; this ends the story early."},
+        "trendy_campaign_focus": {
+            "invite": "Trendy liked the constructive message and community support increased.",
+            "dramatic": "The photos drew attention, but the invitation was less useful.",
+            "blame": "Trendy objected to insulting residents and community support fell."},
+        "trendy_cleanup_post": {
+            "details": "Volunteers received the practical information needed to join the cleanup.",
+            "snacks": "The post offered a social incentive but not the cleanup logistics.",
+            "guilt": "Trendy rejected the guilt trip and community support fell."},
+        "trendy_criticism_reply": {
+            "one_block": "Trendy embraced the realistic one-block goal and community support rose.",
+            "start_small": "Trendy accepted the honest answer, though it was less compelling.",
+            "dismiss": "Trendy demanded that Yinny delete the hostile reply; severe backlash can end the campaign."},
+        "spendy_water_solution": {
+            "screens": "The screens improved water quality by 15 for 20 budget points.",
+            "modular": "Repairable modular filtration improved water quality by 45 for 50 budget points.",
+            "aqua_sovereign": "The system improved water quality by 70 but consumed all 100 available budget points."},
+        "spendy_pipe": {
+            "repair": "Repairing the source of runoff improved water quality by 20 for 20 budget points.",
+            "testing": "Testing informed residents and improved water quality by 10, but the pipe kept leaking.",
+            "fountain": "The fountain improved water quality by only 5 for 60 budget points; the pipe kept leaking."},
+        "spendy_valve": {
+            "standard": "The repairable valve improved water quality by 15 for 20 budget points.",
+            "monitor": "Monitoring bought time without spending money, while water quality fell by 5.",
+            "premium": "The smart valve improved water quality by 15 for 65 budget points; Spendy objected to the cost."},
+        "sparky_listen": {
+            "listen": "Sparky thanked Yinny and began showing them signs of progress.",
+            "decline": "Sparky gently continued, but Yinny's cynicism increased."},
+        "sparky_sidewalk": {
+            "start": "Sparky celebrated the visible sidewalk as progress.",
+            "bare_minimum": "Sparky was hurt by Yinny dismissing the cleanup's visible result."},
+        "sparky_small_wins": {
+            "ask": "Sparky explained that pride in small steps and continued work can coexist.",
+            "dismiss": "Sparky became sad and defended the value of persistent small steps."},
+        "sparky_daily_reflection": {
+            "promise": "Yinny began the practice by remembering the fish in the river.",
+            "joke": "Sparky accepted Yinny's joke as a first daily bright spot."},
+        "stormy_visit": {
+            "enthusiastic": "Stormy was glad someone wanted to see his machine.",
+            "reluctant": "Stormy was briefly hurt before Yinny agreed to come along."},
+        "stormy_first_component": {
+            "wrench": "The calibration tool advanced the machine build.",
+            "duck": "The rubber duck did not help the machine and Stormy corrected Yinny."},
+        "stormy_stabilizer": {
+            "bucket": "The bucket stabilized the machine and the team made progress.",
+            "spoon": "The spoon did not stabilize the machine."},
+        "stormy_sorting": {
+            "sort": "The sorting system separated recyclables and improved machine safety.",
+            "skip": "The machine lacked its sorting safeguard, increasing the risk of failure."},
+    }
+    CHARACTER_ROLES = {
+        "Yinny": "The otter protagonist, initially overwhelmed by city pollution and learning to act with others.",
+        "Trendy": "A social-media organizer who turns attention into neighborhood cleanup action.",
+        "Spendy": "A practical planner focused on water quality, affordable repairs, and maintenance.",
+        "Sparky": "An optimistic friend who helps Yinny notice progress without ignoring unfinished work.",
+        "Stormy": "Yinny's scientist friend, whose ambitious garbage machine needs teamwork and safety checks.",
+    }
 
     def record_decision(decision_id, option_id, occurrence=1):
         definition = DECISION_CATALOG[decision_id]
@@ -86,9 +151,12 @@ init python:
                  "prompt": definition["prompt"], "choice": option["summary"],
                  "tier": option["tier"], "score": TIER_POINTS[option["tier"]],
                  "min_score": min(scores), "max_score": max(scores),
-                 "characters": list(option["relationships"].keys()),
+                 "characters": (["Yinny"] if decision_id == "wake_up_alarm" else
+                                ["Yinny", ARC_CHARACTERS[definition["arc"]]]),
                  "relationship_changes": dict(option["relationships"]),
-                 "traits": dict(option["traits"]), "summary": option["summary"]}
+                 "traits": dict(option["traits"]), "summary": option["summary"],
+                 "situation": definition["prompt"],
+                 "consequence": DECISION_CONSEQUENCES[decision_id][option_id]}
         # Reassignment is tracked cleanly by Ren'Py's save and rollback system.
         store.decision_log = store.decision_log + [entry]
         store.total_decision_score += entry["score"]
@@ -97,18 +165,115 @@ init python:
         store.trait_scores = {key: value + option["traits"].get(key, 0)
                               for key, value in store.trait_scores.items()}
 
+    def _choice_counts(decisions):
+        return {tier: sum(item["tier"] == tier for item in decisions)
+                for tier in ("best", "okay", "worst")}
+
+    def _arc_context(decisions):
+        result = {}
+        for arc in ("opening", "act_1", "act_2", "act_3", "act_4"):
+            relevant = [item for item in decisions if item["arc"] == arc]
+            if relevant:
+                result[arc] = {"choice_counts": _choice_counts(relevant),
+                               "score": sum(item["score"] for item in relevant),
+                               "possible_score": sum(item["max_score"] for item in relevant),
+                               "choices": [item["choice"] for item in relevant]}
+        return result
+
+    def _behavior_patterns(decisions, arc_context):
+        patterns = []
+        counts = _choice_counts(decisions)
+        patterns.append("Yinny made %d strong, %d mixed, and %d harmful or ineffective choices." %
+                        (counts["best"], counts["okay"], counts["worst"]))
+        story_arcs = {key: value for key, value in arc_context.items() if key != "opening"}
+        if story_arcs:
+            rates = {arc: value["score"] / float(value["possible_score"])
+                     for arc, value in story_arcs.items()}
+            if max(rates.values()) > min(rates.values()):
+                strongest = max(rates, key=rates.get)
+                weakest = min(rates, key=rates.get)
+                patterns.append("Yinny's choices were strongest in %s and weakest in %s." %
+                                (strongest.replace("_", " "), weakest.replace("_", " ")))
+        supportive = sum(any(value > 0 for value in item["relationship_changes"].values()) for item in decisions)
+        strained = sum(any(value < 0 for value in item["relationship_changes"].values()) for item in decisions)
+        patterns.append("Yinny supported friends in %d choices and strained friendships in %d choices." %
+                        (supportive, strained))
+        positive = [name for name, value in store.trait_scores.items() if value >= 2]
+        negative = [name for name, value in store.trait_scores.items() if value <= -2]
+        if positive:
+            patterns.append("Repeated strengths: " + ", ".join(positive) + ".")
+        if negative:
+            patterns.append("Repeated weaknesses: " + ", ".join(negative) + ".")
+        return patterns
+
+    def _environmental_outcomes():
+        return {
+            "cleanup_campaign": ("A large group volunteered and a second neighborhood began organizing."
+                                 if store.community_support >= 4 else
+                                 "A smaller group cleaned the street; a few residents kept helping."),
+            "river": ("The river became visibly clearer after cleanup and water work."
+                      if store.water_quality >= 60 else
+                      "The river remained cloudy, though early improvements appeared."),
+            "water_infrastructure": "Water quality index %d; city budget remaining %d; main solution %s." %
+                                    (store.water_quality, store.city_budget, store.water_solution),
+            "machine": ("Stormy's prototype worked, with the group planning maintenance."
+                        if store.finale_machine_outcome == "working_with_maintenance_plan" else
+                        "Stormy's prototype broke; the group recognized the need for safety and teamwork."
+                        if store.finale_machine_outcome == "prototype_broke_after_unsafe_build" else
+                        "Stormy's prototype has not yet been tested."),
+        }
+
+    def _character_context(decisions, arc_context, outcomes):
+        characters = {}
+        arc_for = {"Trendy": "act_1", "Spendy": "act_2", "Sparky": "act_3"}
+        for name in CHARACTER_ROLES:
+            related = [item["choice"] for item in decisions if name in item["characters"]]
+            entry = {"role": CHARACTER_ROLES[name], "choices_with_yinny": related}
+            if name != "Yinny":
+                entry["relationship_score"] = store.relationship_scores[name]
+            if name in arc_for:
+                entry["arc_result"] = arc_context.get(arc_for[name], {})
+            if name == "Trendy":
+                entry["outcome_so_far"] = outcomes["cleanup_campaign"]
+            elif name == "Spendy":
+                entry["outcome_so_far"] = outcomes["river"] + " " + outcomes["water_infrastructure"]
+            elif name == "Stormy":
+                entry["outcome_so_far"] = outcomes["machine"]
+            elif name == "Sparky":
+                entry["outcome_so_far"] = "Sparky showed Yinny the cleaner sidewalk and a fish in the river, then suggested noticing daily progress."
+            else:
+                entry["outcome_so_far"] = "Yinny reached the end of the main story and saw the team's environmental work."
+            characters[name] = entry
+        return characters
+
     def build_finale_context():
         decisions = list(store.decision_log)
         actual = sum(item["score"] for item in decisions)
         lowest = sum(item["min_score"] for item in decisions)
         highest = sum(item["max_score"] for item in decisions)
         percentage = round(100.0 * (actual - lowest) / (highest - lowest), 1) if highest > lowest else 0.0
-        assessment = "high" if percentage >= 66.7 else "mixed" if percentage >= 33.3 else "low"
+        arc_context = _arc_context(decisions)
+        outcomes = _environmental_outcomes()
+        choice_counts = _choice_counts(decisions)
         return {"game": "In Otter Words", "scoring": {"actual_score": actual,
                 "worst_possible_score": lowest, "best_possible_score": highest,
-                "percentage": percentage, "scored_decisions": len(decisions), "assessment": assessment},
+                "percentage": percentage, "scored_decisions": len(decisions),
+                "best_choices": choice_counts["best"], "okay_choices": choice_counts["okay"],
+                "worst_choices": choice_counts["worst"]},
+                "protagonist": "Yinny",
+                "world": "An otter city struggles with street garbage, polluted runoff, aging water infrastructure, and an experimental garbage machine.",
+                "story_so_far": "Stormy rescued Yinny from a garbage pile. Yinny and Trendy organized a street cleanup; Yinny and Spendy tackled the river and its infrastructure; Sparky helped Yinny reckon with progress; the group tested Stormy's machine.",
                 "relationships": dict(store.relationship_scores), "traits": dict(store.trait_scores),
-                "minigames": [{"name": "River Cleanup", "score": store.river_cleanup_score},
+                "character_context": _character_context(decisions, arc_context, outcomes),
+                "arc_context": arc_context, "behavior_patterns": _behavior_patterns(decisions, arc_context),
+                "environmental_outcomes_so_far": outcomes,
+                "important_events": ["Yinny was buried under street garbage and rescued by Stormy.",
+                                     outcomes["cleanup_campaign"], outcomes["river"], outcomes["machine"]],
+                "minigames": [{"name": "River Cleanup", "score": store.river_cleanup_score,
+                               "trash_collected": store.river_cleanup_trash_collected,
+                               "animals_accidentally_clicked": store.river_cleanup_animals_clicked,
+                               "performance": ("strong" if store.river_cleanup_score >= 20 else
+                                               "moderate" if store.river_cleanup_score >= 10 else "limited")},
                               {"name": "Stormy's Machine", "correct_components": store.correct_tools,
                                "wrong_components": store.wrong_tools, "safety": store.safety,
                                "teamwork": store.teamwork, "outcome": store.finale_machine_outcome}],

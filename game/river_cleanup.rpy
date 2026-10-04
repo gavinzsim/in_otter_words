@@ -12,6 +12,8 @@ define RIVER_CLEANUP_TRASH_POINTS = 1
 define RIVER_CLEANUP_ANIMAL_POINTS = -1
 
 default river_cleanup_score = 0
+default river_cleanup_trash_collected = 0
+default river_cleanup_animals_clicked = 0
 default river_cleanup_active = False
 default river_cleanup_remaining = 60
 default river_cleanup_started_at = 0.0
@@ -45,6 +47,8 @@ init python:
     def river_cleanup_reset():
         """Starts a fresh round without touching any other story variables."""
         store.river_cleanup_score = 0
+        store.river_cleanup_trash_collected = 0
+        store.river_cleanup_animals_clicked = 0
         store.river_cleanup_active = True
         store.river_cleanup_remaining = int(RIVER_CLEANUP_DURATION)
         store.river_cleanup_started_at = river_cleanup_now()
@@ -102,6 +106,10 @@ init python:
             if target["id"] == target_id:
                 river_cleanup_remove_target(target_id)
                 store.river_cleanup_score += target["points"]
+                if target["points"] > 0:
+                    store.river_cleanup_trash_collected += 1
+                else:
+                    store.river_cleanup_animals_clicked += 1
                 store.river_cleanup_popups.append({
                     "text": "+1" if target["points"] > 0 else "-1",
                     "color": "#b9f6ca" if target["points"] > 0 else "#ff9e9e",
