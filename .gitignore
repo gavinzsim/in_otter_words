@@ -2,6 +2,9 @@
 /game/saves
 /game/cache
 
+# API Keys
+/game/secrets.rpy
+
 # Compiled script files. These are important for saving, and so should
 # be preserved by developer and build systems after the game has been released.
 /game/**/*.rpyc
