@@ -74,7 +74,7 @@ label finale:
 
     scene bg park
     with fade
-    $ renpy.say(centered, "Finale — What Kind of Change Did Yinny Make?")
+    $ renpy.say(centered, "Finale: What Kind of Change Did Yinny Make?")
     $ renpy.say(centered, finale_result["ending_title"])
 
     while finale_scene_index < len(finale_result["scenes"]):

@@ -280,7 +280,7 @@ label trendy_campaign:
 
             t "Delete it."
 
-            y "But—"
+            y "But..."
 
             t "Delete."
 
