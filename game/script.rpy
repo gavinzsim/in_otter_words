@@ -14,6 +14,12 @@ image bg bedroom = "images/bedroom.png"
 # Characters
 image yinny = "images/yinny.webp"
 image stormy = "images/stormy.webp"
+image StormyAnnoyedSpeaking = "images/StormyAnnoyedSpeaking.png"
+image StormyAnnoyed = "images/StormyAnnoyed.png"
+image StormyHappy = "images/StormyHappy.png"
+image StormyHappySpeaking = "images/Stormy_Happy_Speaking.png"
+image StormyNormal = "images/Stormy_Normal.png"
+image StormySpeaking = "images/Stormy_Speaking.png"
 
 # VARIABLES
 
