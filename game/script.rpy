@@ -4,6 +4,9 @@
 # Characters
 define y = Character("Yinny")
 define s = Character("Stormy")
+define sp = Character("Sparky")
+define t = Character("Trendy")
+define spe = Character("Spendy")
 
 # Backgrounds
 image bg city = "images/dirty_city.png"
@@ -12,6 +15,7 @@ image bg campus = "images/campus.png"
 image bg bedroom = "images/yinny_bedroom.png"
 image bg livingroom = "images/act4_living.jpg"
 image lab = "images/normal_stormy_lab.png"
+image badLab = "images/destroyed_stormy_lab.png"
 
 # Characters
 image yinny = "images/yinny_otter.png"
@@ -22,8 +26,19 @@ image StormyHappy = "images/Stormy_Happy.png"
 image StormyHappySpeaking = "images/Stormy_Happy_Speaking.png"
 image StormyNormal = "images/Stormy_Normal.png"
 image StormySpeaking = "images/Stormy_Speaking.png"
+image StormySadSpeaking = "images/Stormy_Sad_Speaking.png"
+image StormySad = "images/Stormy_Sad.png"
 image StormyShocked = "images/Stormy_Shocked.png"
+image TrendyHappy = "images/Trendy_Happy.png"
+image SpendyHappy = "images/Spending_Happy.png"
+image SparkyHappy = "images/Sparky_Happy.png"
 image garbage_pile = "images/garbage_pile.png"
+
+default machine_progress = 0
+default correct_tools = 0
+default wrong_tools = 0
+default teamwork = 0
+default safety = 0
 
 # Yinny's canvas includes visual space beneath her feet; offset it downward so
 # the visible sprite baseline matches Stormy's.
@@ -429,20 +444,6 @@ label act1:
     jump act1_start
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #Placeholder for Act 4
 # The game starts here.
 
@@ -482,6 +483,7 @@ label act4:
 
     y "What are you working on?"
 
+    show StormyHappySpeaking
     s "Something incredible."
 
     y "That doesn't answer my question..."
@@ -527,7 +529,7 @@ label act4:
     #Act4 Part 2
 label Act4_Part2:
 
-    scene bg lab
+    scene lab
     show StormyNormal
     "Stormy grabs Yinny and rushes to the machine"
     
@@ -549,20 +551,17 @@ label Act4_Part2:
     
     y "What are you making?"
 
-    s "Okay. Remember when I found you under a pile of garbage a while ago?"
+    s "Okay. Remember when I found you under a pile of garbage a while ago? I thought I would make a machine to help rid of garbage easier"
+    s "This machine should clean any garbage in the area and transport them to a different dimension within a certain radius!"
 
-    
-    s "I'm missing a few components."
+    s "Only problem though is that I'm missing a few components..."
     
     y "And you were going to build this thing by yourself?"
 
-    st "Of course."
+    s "Of course."
 
     y "Why?"
 
-    s "Because I know what I'm doing."
-
-    
     s "Because I know what I'm doing."
     
     "..."
@@ -581,16 +580,370 @@ label Act4_Part2:
 
     s "..."
 
-    #menu: 
-        #"I should help him"
-            #y: "Stormy you can't do this alone. You're stressing yourself out and it's affecting your health and your relationship."
-            #y: "yes"
-   # y "You need help."
+    s "Okay fine I need a lot of help but no one wants to help me."
 
-    s "Fine."
+    s "Trendy is busy with her social media stuff, Spendy is dealing with finances and Sparky hates me."
 
-    s "But only because this experiment is extremely important."
+    y "Don't say that I'm sure if we asked them, they would help you immediately!"
 
-    jump arc4_team_arrives  
+    s "You're lying they would never help me. They all are..."
+
+    "The door suddenly opens wide"
+
+    jump Act4_Part3
+
+label Act4_Part3:
+    scene lab
+    show SparkyHappy at center
+    sp "I never said anything about hating you Sparky. Don't put words in my mouth."
+
+    show TrendyHappy at left
+    t "I always have time for you silly!"
+
+    show SpendyHappy at right
+    spe "Dirt is like money. They both come and go easily and quickly."
+    spe "But our time together is important."
+
+    hide SparkyHappy
+    hide TrendyHappy
+    hide SpendyHappy
+    show StormyShocked
+    s "What the...you guys were listening this whole time..."
+
+
+    y "Ohh so that's why I heard muttering outside. Thought it was the neighbors"
+    y "So what do you think now Stormy?"
+
+    show StormySadSpeaking
+    s "I still don't know how to feel. I can't believe you guys are my friends. I'm so glad you all came to help me save the enviroment with my machine!"
+
+    show TrendyHappy
+    t "Well of course! We're a team aren't we?"
+    
+    show StormyHappySpeaking
+    s "You're right! We are!"
+
+    jump buildingMinigame
+
+label buildingMinigame:
+    scene lab
+    show StormyHappySpeaking
+    s "Okay so here's the plan! I need you all to focus and help me finish this project!"
+    s "we need three components so I need you guys to grab the right ones for me okay?"
+
+    menu:
+        "Calibration wrench":
+            $ correct_tools += 1
+            $ machine_progress += 1
+
+            y "This one?"
+
+            s "Perfect!"
+
+            s "That's exactly what we need."
+
+            t "Yay you're so smart Yinny!"
+
+            jump second_component
+
+        "Rubber duck":
+            $ wrong_tools += 1
+
+            y "This?"
+
+            s "..."
+
+            s "Yinny."
+
+            y "Yeah?"
+
+            s "That's a rubber duck."
+
+            sp "I think it looks important."
+
+            s "It is not important."
+
+            sp "I'm sure it's fine let's use it!"
+
+            jump second_component
+
+label second_component:
+    scene lab
+    s "Now we need something to stabilize the machine. Allows us to make sure no garbage can fall out either!"
+
+    y "Got it."
+
+    menu:
+
+        "A giant bucket":
+            $ correct_tools += 1
+            $ machine_progress += 1
+
+            s "Excellent!"
+
+            sp "We're actually getting somewhere!"
+
+            $ teamwork += 1
+
+            jump third_component
+
+        "A giant spoon":
+            $ wrong_tools += 1
+
+            sp "I vote for the spoon."
+
+            s "Why?"
+
+            sp "Because it's giant."
+
+            s "That isn't a reason."
+
+            t "So is the bucket but I think a spoon is good for scooping out garbage!"
+
+            jump third_component
+
+label third_component:
+    scene lab
+    s "One final component."
+
+    s "This one is important."
+
+    y "What does it do?"
+
+    s "It's a sorting system for the garbage. We want to make sure that we sort recycables away from regular garbage."
+
+    s "Try to be extra careful with this one. Make sure you input it into the system."
+
+    menu:
+
+        "Input a sorting system that sorts everything and puts them in different bins within machine":
+            $ correct_tools += 1
+            $ safety += 2
+            $ machine_progress += 1
+
+            s "Perfect."
+
+            spe "Good. That makes sense."
+
+            spe "Now we'll know what kind of garbage we collected!"
+
+            s "Exactly."
+
+            jump machine_ready
+
+        "Ignore it and finish project":
+            $ safety -= 2
+            $ wrong_tools += 1
+
+            y "We don't really need that."
+
+            s "What?"
+
+            y "I mean why don't we just finish the project and see what happens?"
+
+            spe "It's that the important point of the machine? Also it stops it from overflowing and other errors?"
+
+            s "..."
+
+            st "Fine."
+
+            jump machine_ready
+
+label machine_ready:
+
+    scene scene lab
+    with dissolve
+
+    show StormyHappySpeaking
+
+    s "Alright everyone!"
+
+    s "It's ready!"
+
+    sp "LET'S GO!"
+
+    spe "Wait."
+
+    t "What?"
+
+    spe "Shouldn't we test it first?"
+
+    s "It's fine. We did all the right moves...I think"
+
+    y "Stormy."
+
+    s "What?"
+
+    y "You just spent the entire day telling us that this machine is important."
+
+    y "Maybe we should make sure it's safe."
+
+    pause
+
+    s "..."
+
+    s "You're right. Better safe than sorry."
+
+    $ safety += 1
+
+    s "We'll run a controlled test."
+
+    jump finaleDecision
+
+label finaleDecision:
+    if safety >= 2 and correct_tools >= 2:
+        jump stormy_good_ending
+    else:
+        jump otter_disaster
+
+label stormy_good_ending:
+
+    scene lab
+    with fade
+
+    show StormyHappySpeaking
+
+    s "It's working!"
+
+    sp "WE DID IT!"
+
+    t "Woah! I should document this on social media!!"
+
+    spe "Not yet we should try to wait till the deadline passes."
+
+    t "but we should document everything..."
+
+    s "We will and schedule regular maintenance."
+
+    y "You sound different."
+
+    s "Do I?"
+
+    y "You were going to do everything yourself this morning."
+
+    s "I thought the machine was the important part."
+
+    s "But I think I was wrong."
+
+    s "The people taking care of the machine are just as important."
+
+    y "Now you're thinking like a scientist."
+
+    s "I am a scientist."
+
+    y "You know what I mean."
+
+    s "..."
+
+    s "Thank you, Yinny. And thank you all for helping."
+    return
+
+label otter_disaster:
+
+    scene lab
+    with vpunch
+
+    s "Uh..."
+
+    y "Stormy?"
+
+    s "That's sounds really bad..."
+
+    sp "Is it supposed to make that noise?"
+
+    "BEEP."
+
+    "BEEP."
+
+    "BEEP."
+
+    t "Stormy."
+
+    s "Yes?"
+
+    t "Why is it doing that?"
+
+    s "I..."
+
+    s "feel like that we did something wrong..."
+
+    y "What?"
+
+    s "Several things."
+
+    "BEEP BEEP BEEP!"
+
+    sp "EVERYONE OUT!"
+
+    scene black
+    with vpunch
+
+    "WHOOM!"
+
+    "..."
+
+    scene badLab
+
+    show StormySad
+
+    s "..."
+
+    y "..."
+
+    s "..."
+
+    t "..."
+
+    spe "..."
+
+    s "The machine is..."
+
+    s "Definitely broken."
+
+    y "You think?"
+
+    s "On the bright side..."
+
+    y "There is no bright side."
+
+    s "..."
+
+    s "sigh..."
+
+    s "I wanted to prove that we could create something incredible."
+
+    s "But I forgot something important."
+
+    y "What's that?"
+
+    s "Just because we can build something..."
+
+    s "...doesn't mean we should rush to use it."
+
+    s "Technology needs responsibility."
+
+    s "And people need to work together to keep it safe."
+
+    y "So..."
+
+    y "What did we learn?"
+
+    spe "Don't let Sparky touch the tools?"
+
+    sp "HEY!"
+
+    t "That's one lesson."
+
+    s "But the bigger lesson is that powerful technology requires care."
+
+    s "And maintenance."
+
+    y "And teamwork."
+
+    s "And maybe..."
+
+    s "A checklist."
+
+    y "Definitely a checklist..."
 
     return

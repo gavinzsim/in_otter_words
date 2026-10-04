@@ -459,4 +459,5 @@ label act1_end:
     centered "Small changes. Real impact."
 
     pause 2.0
+    jump act4
     return
