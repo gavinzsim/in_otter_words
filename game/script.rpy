@@ -6,10 +6,10 @@ define y = Character("Yinny")
 define s = Character("Stormy")
 
 # Backgrounds
-image bg city = "images/city.png"
+image bg city = "images/clean_city.png"
 image bg bathroom = "images/bathroom.png"
 image bg campus = "images/campus.png"
-image bg bedroom = "images/bedroom.png"
+image bg bedroom = "images/yinny_bedroom.png"
 image bg livingroom = "images/act4_living.jpg"
 
 # Characters
@@ -21,7 +21,24 @@ image StormyHappy = "images/StormyHappy.png"
 image StormyHappySpeaking = "images/Stormy_Happy_Speaking.png"
 image StormyNormal = "images/Stormy_Normal.png"
 image StormySpeaking = "images/Stormy_Speaking.png"
-image 
+image StormyShocked = "images/Stormy_Shocked.png"
+image garbage_pile = "images/garbage_pile.png"
+
+# Yinny's canvas includes visual space beneath her feet; offset it downward so
+# the visible sprite baseline matches Stormy's.
+transform yinny_left:
+    xalign 0.0
+    yalign 1.0
+    xoffset -75
+    yoffset 200
+    zoom 0.7
+
+# Place Stormy slightly inward from the right edge and align the characters
+# lower in the scene.
+transform stormy_right:
+    xalign 1.0
+    yalign 1.0
+    zoom 0.7
 
 
 # VARIABLES
@@ -52,6 +69,7 @@ label start:
 label wake_up:
 
     scene bg bedroom
+    show yinny at yinny_left
 
     "BEEP. BEEP. BEEP."
 
@@ -93,6 +111,8 @@ label snooze_ending:
     scene black
     with fade
 
+    show yinny at yinny_left
+
     "Several hours later..."
 
     y "..."
@@ -119,12 +139,16 @@ label get_up:
     scene bg bedroom
     with dissolve
 
+    show yinny at yinny_left
+
     y "Fine. I'm awake."
 
     y "Technically."
 
     scene bg bathroom
     with fade
+
+    show yinny at yinny_left
 
     "Yinny turns on the sink."
 
@@ -154,6 +178,8 @@ label outside:
 
     scene bg city
     with fade
+
+    show yinny at yinny_left
 
     y "Alright. New day."
 
@@ -186,6 +212,11 @@ label outside:
 
     y "MMMPH!"
 
+    scene bg city
+    with dissolve
+
+    show garbage_pile at yinny_left
+
     y "WHY IS THERE A WHOLE CHAIR IN HERE?!"
 
     s "Yinny?"
@@ -200,10 +231,9 @@ label outside:
 
     "Stormy starts pulling bags away."
 
-    scene bg city
-    with dissolve
-
-    show stormy
+    hide garbage_pile
+    show yinny at yinny_left
+    show stormy at stormy_right
 
     s "There."
 
@@ -369,6 +399,9 @@ label main_story:
     scene bg city
     with fade
 
+    show yinny at yinny_left
+    show stormy at stormy_right
+
     y "Alright."
 
     y "Let's go save the world."
@@ -421,7 +454,62 @@ label act4:
 
     y "Hey I hope it's okay if I barge in here randomly."
 
+    show StormyShocked
+    s "Yinny!"
 
+    s "You came!"
+
+    y "What are you working on?"
+
+    s "Something incredible."
+
+    y "That doesn't answer my question..."
+
+    s "I'm building a new energy machine!"
+
+    y "..."
+
+    y "That sounds dangerous."
+
+    s "Dangerous?"
+
+    s "No, no, no."
+
+    s "It's only incredibly powerful."
+
+    y "That's not exactly reassuring."
+
+    s "Don't worry, I have it all under control. Come with me I'll show you!!"
+
+    "Stormy grabs Yinny and rushes to the machine"
+
+    s "I've been working on this for days."
+
+    y "Days?"
+
+    s "Yes!"
+
+    s "I barely slept. I was on a strict deadline. It had to be done by the end of today."
+
+    y "Stormy..."
+
+    s "I know! I know!"
+
+    s "But look!"
+
+    s "The prototype is almost complete."
+
+    y "Almost?"
+
+    s "I'm missing a few components."
+
+    y "And you were going to build this thing by yourself?"
+
+    st "Of course."
+
+    y "Why?"
+
+    st "Because I know what I'm doing."
 
 
     return
