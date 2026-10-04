@@ -14,6 +14,12 @@ image bg bedroom = "images/bedroom.png"
 # Characters
 image yinny = "images/yinny.webp"
 image stormy = "images/stormy.webp"
+image StormyAnnoyedSpeaking = "images/StormyAnnoyedSpeaking.png"
+image StormyAnnoyed = "images/StormyAnnoyed.png"
+image StormyHappy = "images/StormyHappy.png"
+image StormyHappySpeaking = "images/Stormy_Happy_Speaking.png"
+image StormyNormal = "images/Stormy_Normal.png"
+image StormySpeaking = "images/Stormy_Speaking.png"
 
 # VARIABLES
 
@@ -380,5 +386,41 @@ label main_story:
     centered "End of Opening Demo"
 
     return
+
+#Placeholder for Act 4
+
+
+# The game starts here.
+
+label act4:
+    scene bg scene1
+    with fade
+
+    "Stormy sobs loudly as he runs away from his completed experiment."
+    st "As always, I'm all alone." 
+    st "I just wanted to show everyone my talent."
+
+    "He hops on the couch and cuddles with a strange new plushie"
+
+    st "But of course no one actually cares."
+    "Stormy continues to cry himself to sleep"
+
+    "ding dong, ding dong"
+
+    st "wait who's here?"
+
+
+    st "I'm coming!"
+    "Stormy wipes his tears and rushes to the door."
+
+    st "Sniff sniff who's here"
+
+
+    
+    # This ends the game.
+    return
+
+
+
 
     return
