@@ -581,11 +581,11 @@ label Act4_Part2:
 
     s "..."
 
-    menu: 
-        "I should help him"
-            y: "Stormy you can't do this alone. You're stressing yourself out and it's affecting your health and your relationship."
-            y: "yes"
-    y "You need help."
+    #menu: 
+        #"I should help him"
+            #y: "Stormy you can't do this alone. You're stressing yourself out and it's affecting your health and your relationship."
+            #y: "yes"
+   # y "You need help."
 
     s "Fine."
 
