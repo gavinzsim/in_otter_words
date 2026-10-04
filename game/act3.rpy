@@ -67,6 +67,8 @@ label act3_sparky:
     menu:
         "Sure, go ahead.":
             $ record_decision("sparky_listen", "listen")
+            hide SparkyWorried
+            show sparky
             $ sparky_bond += 1
             sp "Thanks!"
 

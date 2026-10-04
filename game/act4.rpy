@@ -14,6 +14,9 @@ image spendyHappy = "images/Spending_Happy.png"
 image spendyShock = "images/Spendy_Shocked.png"
 image trendyShock = "images/Trendy_Shocked.png"
 image spendyNormal = "images/Spendy_Normal.png"
+image trendyNormal = "images/Trendy_Normal.png"
+image sparkyShock = "images/Sparky_Shocked.png"
+image sparkyAnnoyedSpeaking = "images/Sparky_Annoyed_Speaking.png"
 
 # State for Act 4's component-building choices.
 default correct_tools = 0
@@ -312,7 +315,7 @@ label machine_ready:
     hide StormyHappySpeaking
     show spendyNormal
     p "Shouldn't we test it first?"
-    show stormyNormal at right
+    show StormyNormal at right
     s "It's fine. We did all the right moves... I think..."
     y "Stormy."
     s "What?"
@@ -351,7 +354,11 @@ label stormy_good_ending:
     hide trendyShock
     show spendyNormal
     p "Not yet. We should wait until the deadline passes."
+    show trendyNormal at right
     t "But we should document everything..."
+    hide spendyNormal
+    hide trendyNormal
+    show StormyNormal at right
     s "We will, and we'll schedule regular maintenance."
     y "You sound different."
     s "Do I?"
@@ -363,6 +370,8 @@ label stormy_good_ending:
     s "I am a scientist."
     y "You know what I mean."
     s "..."
+    hide StormyNormal
+    show StormyHappySpeaking at right
     s "Thank you, Yinny. And thank you all for helping."
     jump finale
 
@@ -373,13 +382,17 @@ label otter_disaster:
     with vpunch
 
     show yinny at yinny_left
+    show stormyShock at right
     s "Uh..."
     y "Stormy?"
     s "That sounds really bad..."
+    show sparkyShock
     sp "Is it supposed to make that noise? It sounds like an alarm of some sort..."
     "BEEP."
     "BEEP."
     "BEEP."
+    hide sparkyShock
+    show trendyShock
     t "Stormy."
     s "Yes?"
     t "Why is it doing that?"
@@ -391,8 +404,12 @@ label otter_disaster:
     "BEEP. BEEP."
     s "Scratch that, several things wrong."
     "BEEP BEEP BEEP!"
+    hide yinny 
+    hide trendyShock
+    hide stormyShock
+    show sparkyShock
     sp "EVERYONE OUT!"
-
+    hide sparkyShock
     scene black
     with vpunch
     "BOOM!"
@@ -400,19 +417,35 @@ label otter_disaster:
 
     scene bg bad lab
     show yinny at yinny_left
-    show StormySad
-    s "..."
     y "..."
+    show stormyShock
     s "..."
+    hide StormyShock
+    show trendyShock
     t "..."
+    hide trendyShock
+    show sparkyShock
+    sp "..."
+    hide sparkyShock
+    show spendyShock
     p "..."
+    hide spendyShock
+    hide stormyShock
+    show StormySadSpeaking at right
     s "The machine is..."
     s "Definitely broken."
     y "You think?"
+    hide StormySadSpeaking
+    show StormyHappySpeaking at right
     s "On the bright side..."
+
     y "There is no bright side."
+    hide StormyHappySpeaking at right
+    show StormySad
     s "..."
     s "Sigh..."
+    hide StormySad
+    show StormyNormal
     s "I wanted to prove that we could create something incredible."
     s "But I forgot something important."
     y "What's that?"
@@ -421,9 +454,17 @@ label otter_disaster:
     s "Technology needs responsibility, and people need to work together to keep it safe."
     y "So..."
     y "What did we learn?"
+    hide StormyNormal
+    show StormyHappySpeaking
     p "Don't let Sparky touch the tools?"
+    hide StormySad
+    show sparkyAnnoyedSpeaking
     sp "HEY!"
+    show trendyNormal at right
     t "That's one lesson."
+    hide sparkyAnnoyedSpeaking
+    hide trendyNormal
+    show StormyHappySpeaking at right
     s "But the bigger lesson is that powerful technology requires care."
     s "And maintenance."
     y "And teamwork."
