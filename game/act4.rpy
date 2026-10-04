@@ -12,6 +12,8 @@ image stormyAnnoyedSpeak = "images/Stormy_Annoyed_Speaking.png"
 image sparkyHappySpeak = "images/Sparky_Happy_Speaking.png"
 image spendyHappy = "images/Spending_Happy.png"
 image spendyShock = "images/Spendy_Shocked.png"
+image trendyShock = "images/Trendy_Shocked.png"
+image spendyNormal = "images/Spendy_Normal.png"
 
 # State for Act 4's component-building choices.
 default correct_tools = 0
@@ -301,16 +303,18 @@ label machine_ready:
     show sparkyHappy
     sp "LET'S GO!"
     hide sparkyHappy
-    show spendyHappy
+    show spendyNormal
     p "Wait."
-    hide spendyHappy
+    hide spendyNormal
     show trendy happy
     t "What?"
+    hide trendy happy
+    hide StormyHappySpeaking
+    show spendyNormal
     p "Shouldn't we test it first?"
+    show stormyNormal at right
     s "It's fine. We did all the right moves... I think..."
     y "Stormy."
-    hide StormyHappySpeaking
-    show StormyNormal
     s "What?"
     y "You just spent the entire day telling us that this machine is important."
     y "Maybe we should make sure it's safe."
@@ -336,10 +340,16 @@ label stormy_good_ending:
     with fade
 
     show yinny at yinny_left
-    show StormyHappySpeaking
+    show StormyHappySpeaking at right
     s "It's working!"
+    hide StormyHappySpeaking 
+    show sparkyHappy
     sp "WE DID IT!"
+    show trendyShock at right
     t "Woah! I should document this on social media!!"
+    hide sparkyHappy
+    hide trendyShock
+    show spendyNormal
     p "Not yet. We should wait until the deadline passes."
     t "But we should document everything..."
     s "We will, and we'll schedule regular maintenance."
