@@ -6,10 +6,10 @@ define y = Character("Yinny")
 define s = Character("Stormy")
 
 # Backgrounds
-image bg city = "images/city.png"
+image bg city = "images/clean_city.png"
 image bg bathroom = "images/bathroom.png"
 image bg campus = "images/campus.png"
-image bg bedroom = "images/bedroom.png"
+image bg bedroom = "images/yinny_bedroom.png"
 image bg livingroom = "images/act4_living.jpg"
 
 # Characters
@@ -421,7 +421,62 @@ label act4:
 
     y "Hey I hope it's okay if I barge in here randomly."
 
+    show StormyShocked
+    s "Yinny!"
 
+    s "You came!"
+
+    y "What are you working on?"
+
+    s "Something incredible."
+
+    y "That doesn't answer my question..."
+
+    s "I'm building a new energy machine!"
+
+    y "..."
+
+    y "That sounds dangerous."
+
+    s "Dangerous?"
+
+    s "No, no, no."
+
+    s "It's only incredibly powerful."
+
+    y "That's not exactly reassuring."
+
+    s "Don't worry, I have it all under control. Come with me I'll show you!!"
+
+    "Stormy grabs Yinny and rushes to the machine"
+
+    s "I've been working on this for days."
+
+    y "Days?"
+
+    s "Yes!"
+
+    s "I barely slept. I was on a strict deadline. It had to be done by the end of today."
+
+    y "Stormy..."
+
+    s "I know! I know!"
+
+    s "But look!"
+
+    s "The prototype is almost complete."
+
+    y "Almost?"
+
+    s "I'm missing a few components."
+
+    y "And you were going to build this thing by yourself?"
+
+    st "Of course."
+
+    y "Why?"
+
+    st "Because I know what I'm doing."
 
 
     return
