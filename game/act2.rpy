@@ -1,398 +1,566 @@
-# ACT 2 - SPARKY
+# Act 2 - Spendy: Sustainable Solutions
 
-label act2_sparky:
+define p = Character("Spendy")
 
-    scene black
-    with fade
+default city_budget = 100
+default water_quality = 0
+default water_solution = ""
 
-    centered "Two weeks later..."
+image bg dirty river = "images/dirty_river.png"
+image bg clean river = "images/clean_river.png"
+image bg spendy office = "images/spendy_office.png"
+image bg clean city = "images/clean_city.png"
 
-    scene bg park
-    with fade
+image spendy normal = "images/Spendy_Normal.png"
+image spendy speaking = "images/Spendy_Speaking.png"
+image spendy happy speaking = "images/Spendy_Happy_Speaking.png"
+image spendy sad = "images/Spendy_Sad.png"
+image spendy sad speaking = "images/Spendy_Sad_Speaking.png"
+image spendy annoyed = "images/Spendy_Annoyed.png"
+image spendy annoyed speaking = "images/Spendy_Annoyed_Speaking.png"
+image spendy shocked = "images/Spendy_Shocked.png"
 
-    show yinny at yinny_left
+transform spendy_right:
+    xalign 1.0
+    yalign 1.0
+    xoffset -70
+    zoom 0.72
 
-    "The city is cleaner."
+label act2_spendy:
 
-    "Not clean. Cleaner."
+    $ city_budget = 100
+    $ water_quality = 0
+    $ water_solution = ""
 
-    "Yinny stares at a trash can that is, for once, not overflowing."
-
-    y "..."
-
-    y "There's still so much left."
-
-    y "The water's still noticeably discolored. The air still has a stink."
-
-    y "We fixed one street. It took us so long to clean one, what of the hundreds that still need cleaning?"
-
-    "Yinny sinks onto a park bench."
-
-    show sparky at sparky_right
-    sp "Wow... That is a very heavy sigh."
-
-    y "AH!"
-
-    y "Where did you come from?"
-
-    sp "The bench behind you."
-
-    sp "I've been here for ten minutes."
-
-    y "...Why?"
-
-    sp "Sunshine. It's nice."
-
-    sp "I'm Sparky! You're the otter who got buried in garbage, right?"
-
-    y "Does everyone know about that?"
-
-    sp "There's a video. It was pretty viral."
-
-    y "Of course there is."
-
-    show SparkyWorried at sparky_right
-    sp "You look like you're carrying the whole city on your back."
-
-    y "Because it feels like I am."
-
-    y "We cleaned up, and people noticed. But it's not enough."
-
-    y "It's going to take forever at this rate."
-
-    sp "Mm."
-
-    sp "Can I ask you something?"
-
-    menu:
-        "Sure, go ahead.":
-            $ sparky_bond += 1
-            sp "Thanks!"
-
-        "Not really in the mood.":
-            $ cynicism += 1
-            sp "That's okay."
-            sp "I'll ask anyway, but gently."
-
-    sp "When was the last time you looked at what's gotten better?"
-
-    y "..."
-
-    y "Better?"
-
-    y "I mean... there's still garbage."
-
-    sp "That's what's wrong. It's what you're looking at."
-
-    sp "I asked about 'what's better', about what has changed since you started this."
-
-    jump sparky_walk
-
-
-# THE WALK
-label sparky_walk:
-
-    scene bg city
+    scene bg dirty river
     with fade
 
     show yinny at yinny_left
-    show SparkyHappy at sparky_right
+    show spendy speaking at spendy_right
 
-    sp "Come on. Walk with me."
+    p "So Trendy found the storm drain."
 
-    y "Where?"
+    y "She described you as someone who likes problems underneath problems."
 
-    sp "Nowhere fancy. Just to look around, consider it as sightseeing."
+    show spendy normal at spendy_right
 
-    "They walk down the same street where Yinny was buried."
+    p "I'll choose to take that as a compliment."
 
-    "The sidewalk is visible."
+    "Yinny looks across the river."
 
-    "A few otters are sorting recycling into bins."
+    "The water is cloudy, and bits of litter have collected along the bank."
 
-    "A kid proudly shows her friend a bottle going into the right bin."
+    y "This is worse than I thought."
 
-    sp "Remember this street?"
+    p "The garbage is only part of it."
 
-    y "I remember being under it."
+    show spendy speaking at spendy_right
 
-    sp "Exactly. Look at it now."
+    p "Runoff from the streets enters here."
 
-    y "...It's a sidewalk."
+    p "There's also a damaged pipe upstream, and the city's filtration system is overdue for an upgrade."
 
-    sp "A sidewalk!"
+    y "That would explain the brown water from my tap this morning."
 
-    sp "With nobody going around it or playing a 'game' of dodgeball with garbage!"
+    show spendy shocked at spendy_right
 
-    menu:
-        "It's a start, I guess.":
-            $ sparky_bond += 1
-            y "Okay. It is kind of nice."
-            sp "See? Progress!"
+    p "Your water was brown?"
 
-        "That's the bare minimum.":
-            $ cynicism += 1
-            y "A sidewalk shouldn't count as an achievement."
-            show SparkyWorried at sparky_right
-            sp "Oh."
-            sp "Well. It counts a little."
+    y "Very."
 
-    "A group of otters waves at Yinny from across the street."
+    p "And you still drank it?"
 
-    "Yinny waves back, confused."
+    y "I considered it."
 
-    sp "You know them?"
+    p "Yinny!"
 
-    y "No."
+    y "I didn't!"
 
-    sp "But they know you."
+    show spendy normal at spendy_right
 
-    sp "Your campaign got them out here. You got them to do something for the city."
+    p "The good news is that we can improve this."
 
-    y "It was Trendy's campaign, not me."
+    y "And the bad news?"
 
-    sp "Trendy's campaign, with YOU in it."
+    p "Everything costs money."
 
-    y "..."
+    y "There it is."
 
-    y "I guess I never thought about people actually listening."
-
-    jump sparky_river
+    jump river_cleanup_start
 
 
-# THE RIVER
-label sparky_river:
+# Water investigation
+label spendy_water_investigation:
 
-    scene bg river
-    with fade
+    scene bg spendy office
+    with dissolve
 
     show yinny at yinny_left
-    show sparky at sparky_right
+    show spendy normal at spendy_right
 
-    "The river is not clear."
+    "Spendy spreads several reports across the desk."
 
-    "But it is no longer a shopping cart graveyard."
+    p "Here's what we're working with."
 
-    "Something silver flickers beneath the surface."
+    show spendy speaking at spendy_right
 
-    y "Is that..."
+    p "The city has 100 budget points available."
 
-    sp "A fish!"
+    p "We need to reduce pollution now..."
 
-    sp "A fish that's actually swimming!"
+    p "...but whatever we install also needs to be maintained later."
 
-    y "On purpose?"
+    y "So we can't just buy the biggest machine."
 
-    sp "On purpose!"
+    p "We can."
 
-    "Yinny watches the fish circle lazily."
+    y "Oh."
 
-    y "Stormy saw one last week. It was stuck in a cart."
+    p "It would just be a terrible idea."
 
-    sp "Different fish. Or maybe he's moved up in the world."
+    y "Important clarification."
 
-    "Yinny laughs. It surprises them."
+    p "Environmental planning isn't about finding the most impressive solution."
 
-    y "Okay."
+    p "It's about finding something effective that we can actually afford to keep working."
 
-    y "Okay, that's actually pretty great."
+    y "Effective, affordable, maintainable."
 
-    show SparkyHappy at sparky_right
-    sp "There it is!"
+    p "Exactly."
 
-    sp "That's the feeling I wanted you to find."
+    y "Very responsible."
 
-    y "But Sparky, it's not like the problem's solved."
+    y "I hate it."
 
-    sp "Nope."
+    p "You'll be fine."
 
-    sp "And it might not be for a long time."
+    jump spendy_solutions
 
-    sp "But if you only count the finish line, you'll never notice you've been moving. The goal is important, but so are the steps you take to reach it."
+
+# Water solutions
+label spendy_solutions:
+
+    show spendy speaking at spendy_right
+
+    p "First decision."
+
+    p "What do we do about the polluted runoff entering the river?"
 
     menu:
-        "So I should just be happy with small wins?":
-            $ sparky_bond += 1
-            sp "Not 'just.' You should be proud of them AND keep going."
-            sp "You get to do both. No one said you can only do one of them."
 
-        "Small wins don't fix big problems.":
-            $ cynicism += 1
-            sp "..."
-            show SparkySad at sparky_right
-            sp "Maybe not individually..."
-            sp "But they add up. Like drops into a bucket, with enough persistence, we will fill it."
+        "Choose the main water improvement."
 
-    jump sparky_check
+        "Install runoff screens — Cost: 20 | Improvement: +15":
+            $ city_budget -= 20
+            $ water_quality += 15
+            $ water_solution = "cheap"
 
+            show spendy happy speaking at spendy_right
 
-# CHECK FOR ENDING
-label sparky_check:
+            p "Simple and inexpensive."
 
-    if cynicism >= 3:
-        jump depression_ending
+            p "It won't solve everything, but it'll stop a lot of solid waste before it reaches the river."
+
+            y "Small fix. Real improvement."
+
+            p "Exactly."
+
+        "Install modular filtration — Cost: 50 | Improvement: +45":
+            $ city_budget -= 50
+            $ water_quality += 45
+            $ water_solution = "balanced"
+
+            show spendy happy speaking at spendy_right
+
+            p "More expensive, but much stronger."
+
+            p "And because it's modular, we can repair or expand it later."
+
+            y "So this is the boring sensible choice."
+
+            p "My favorite kind."
+
+        "Install the Aqua-Sovereign 9000 — Cost: 100 | Improvement: +70":
+            $ city_budget -= 100
+            $ water_quality += 70
+            $ water_solution = "extreme"
+
+            show spendy shocked at spendy_right
+
+            p "You spent the entire budget."
+
+            y "But look at those specifications."
+
+            p "It has a decorative laser engraving of a koi fish on it..."
+
+            y "Exactly."
+
+            p "Those do not improve the water."
+
+            y "They improve my water."
+
+    show spendy normal at spendy_right
+
+    p "Budget remaining: [city_budget]."
+
+    y "That number feels more threatening when you say it out loud."
+
+    show spendy speaking at spendy_right
+
+    p "Next problem."
+
+    p "The damaged runoff pipe is still sending dirty water downstream."
+
+    y "So cleaning the river without fixing the pipe would be..."
+
+    p "Cleaning the floor while the sink is overflowing."
+
+    y "Got it."
+
+    menu:
+
+        "What should they do about the damaged runoff pipe?"
+
+        "Repair the pipe — Cost: 20 | Improvement: +20":
+            $ city_budget -= 20
+            $ water_quality += 20
+
+            show spendy happy speaking at spendy_right
+
+            p "Good."
+
+            p "Stopping pollution at the source is usually cheaper than cleaning it up forever."
+
+            y "Very annoyingly logical."
+
+        "Add public testing and refill stations — Cost: 10 | Improvement: +10":
+            $ city_budget -= 10
+            $ water_quality += 10
+
+            show spendy speaking at spendy_right
+
+            p "Useful, especially for keeping residents informed."
+
+            y "But the pipe?"
+
+            p "Still leaking."
+
+            y "Right."
+
+            p "Helping people see a problem isn't the same as fixing its source."
+
+        "Build a fountain to show for 'water awareness' — Cost: 60 | Improvement: +5":
+            $ city_budget -= 60
+            $ water_quality += 5
+
+            show spendy annoyed speaking at spendy_right
+
+            p "We have purchased synchronized water jets."
+
+            y "'Educational' synchronized water jets."
+
+            p "The polluted pipe is twenty metres away."
+
+            y "But can the polluted pipe play music?"
+
+            p "I regret inviting you."
+
+    if city_budget < 0:
+        jump spendy_bad_ending
+
+    show spendy shocked at spendy_right
+
+    p "Wait."
+
+    y "That's not your good 'wait,' is it?"
+
+    p "There is no good 'wait.'"
+
+    "Spendy points at the latest inspection report."
+
+    p "The pressure valve is corroded."
+
+    p "If it fails, part of the system could shut down."
+
+    y "How much?"
+
+    p "A normal replacement costs 20."
+
+    y "Budget remaining?"
+
+    p "[city_budget]."
+
+    y "Ah."
+
+    p "This is why leaving room in the budget matters."
+
+    menu:
+
+        "How should they handle the valve?"
+
+        "Install a standard replacement — Cost: 20 | Improvement: +15":
+            $ city_budget -= 20
+            $ water_quality += 15
+
+            show spendy happy speaking at spendy_right
+
+            p "Reliable."
+
+            p "Repairable."
+
+            p "Not remotely exciting."
+
+            y "You've never looked happier."
+
+        "Monitor it for now — Cost: 0 | Improvement: -5":
+            $ water_quality -= 5
+
+            show spendy sad speaking at spendy_right
+
+            p "Not ideal."
+
+            p "We'll have to inspect it constantly until we can afford the replacement."
+
+            y "So we're buying time."
+
+            p "Exactly."
+
+            p "Sometimes that's the realistic option."
+
+        "Install a premium smart valve — Cost: 65 | Improvement: +15":
+            $ city_budget -= 65
+            $ water_quality += 15
+
+            show spendy annoyed speaking at spendy_right
+
+            p "It sends notifications."
+
+            y "Useful."
+
+            p "It tracks pressure from your phone."
+
+            y "Very useful."
+
+            p "It has customizable RGB lighting."
+
+            y "Essential."
+
+            p "It is a valve, Yinny. Not a disco rave."
+
+    if city_budget < 0:
+        jump spendy_bad_ending
     else:
-        jump sparky_resolution
+        jump spendy_resolution
 
 
-# BAD ENDING: DEPRESSION
-label depression_ending:
+# Spendy resolution
+label spendy_resolution:
 
-    scene bg river
-    with fade
+    if water_quality >= 60:
 
-    show yinny at yinny_left
-    show SparkySad at sparky_right
+        scene bg clean river
+        with fade
 
-    y "You know what?"
+        show yinny at yinny_left
+        show spendy normal at spendy_right
 
-    y "Even the fish is going to end up in a plastic bag."
+        "A few days later, Yinny and Spendy return to the river."
 
-    sp "Yinny..."
+        "The difference is visible."
 
-    y "The river will be polluted again in a year."
+        "There is less debris along the bank, and the cloudy sheen has began to disappear."
 
-    y "And the city will have forgotten about us."
+    else:
 
-    y "And the sun will burn out eventually."
+        scene bg dirty river
+        with fade
 
-    sp "That's... a very long timeline."
+        show yinny at yinny_left
+        show spendy normal at spendy_right
 
-    y "Nothing matters. We're a speck on a rock."
+        "A few days later, Yinny and Spendy return to the river."
 
-    sp "..."
+        "The water is not clean yet."
 
-    sp "I came to cheer you up."
+        "But there is less garbage collecting near the outflow, and the first improvements are starting to show."
 
-    sp "But now I'm thinking about the sun."
+    if water_solution == "balanced" and water_quality >= 65 and city_budget >= 10:
 
-    y "Yeah."
+        show spendy happy speaking at spendy_right
 
-    sp "..."
+        p "Good water improvement."
 
-    sp "Do you think the fish is okay?"
+        p "Infrastructure repaired."
 
-    y "No."
+        p "And we still have [city_budget] budget points left."
 
-    sp "..."
+        y "So we didn't choose the biggest solution..."
 
-    "Sparky slowly lowers their head."
+        p "We chose one that solved the problem without creating a new one."
 
-    "The two otters sit in silence."
+        y "And we can actually afford to maintain it."
 
-    "A single piece of trash floats by."
+        p "Now you're getting it."
 
-    "Neither of them has the energy to grab it."
+        y "I don't like how financially responsible I'm becoming."
+
+    elif water_solution == "extreme" and city_budget == 0:
+
+        show spendy speaking at spendy_right
+
+        p "The filtration system works."
+
+        y "That sounds good."
+
+        p "It is."
+
+        p "But we have no money left for maintenance."
+
+        y "Less good."
+
+        p "The most powerful solution isn't automatically the best solution."
+
+        y "But the laser koi—"
+
+        p "No."
+
+    else:
+
+        show spendy speaking at spendy_right
+
+        p "It's not perfect."
+
+        p "But the water is better than it was before."
+
+        y "And we didn't need to fix everything at once."
+
+        p "Exactly."
+
+        p "You make the best improvement you realistically can..."
+
+        p "...then you keep building from there."
+
+        y "Small changes."
+
+        p "Real impact."
+
+        y "Hey."
+
+        y "That's pretty good."
+
+    jump act2_end
+
+
+# Spendy bad ending
+label spendy_bad_ending:
 
     scene black
     with fade
 
     centered "ENDING UNLOCKED"
 
-    centered "\"Depression\""
+    centered "Bankruptcy"
 
-    centered "Yinny was so determined to be realistic that they made the sunshine otter give up."
+    centered "Your Wallet Was Sacrificed for the Greater Cause"
 
-    centered "That takes talent."
+    pause 1.0
+
+    centered "The environmental upgrades are excellent."
+
+    centered "Unfortunately, the city no longer has a budget for long term maintenance. Even in debt in some aspects."
+
+    show spendy sad at spendy_right
+
+    p "We spent money we did not have."
+
+    y "But the river looks nice."
+
+    p "Yinny."
+
+    y "I'm trying to find the positive."
+
+    p "The positive is currently our debt."
+
+    y "Ah."
 
     pause 3.0
 
     return
 
 
-# GOOD PATH: RESOLUTION
-label sparky_resolution:
+# Act 2 ending
+label act2_end:
 
-    scene bg river
-    with dissolve
+    scene bg clean city
+    with fade
 
     show yinny at yinny_left
-    show sparky at sparky_right
 
-    y "I think I've been doing this wrong."
+    "By the end of the week, the city feels a little different."
 
-    sp "Oh?"
+    if community_support >= 4:
 
-    y "I keep measuring everything against the perfect version."
+        "The cleaned streets have stayed mostly clear."
 
-    y "A clean city. Zero waste. Everything fixed."
+        "A second neighborhood has already started organizing its own cleanup."
 
-    y "Anything less feels like failing."
+    else:
 
-    sp "That sounds exhausting."
+        "The streets are not spotless."
 
-    y "It is."
+        "But the worst piles are gone, and a few residents have started carrying garbage bags of their own."
 
-    sp "Want a trick?"
+    if water_quality >= 60:
 
-    y "Please."
+        "Down by the river, the water is visibly clearer."
 
-    show SparkyHappy at sparky_right
-    sp "Every night, think of one thing that got better today."
+    else:
 
-    sp "Doesn't matter how small."
+        "Down by the river, the cleanup is still a work in progress."
 
-    sp "A full recycling bin. A new volunteer. A fish."
+    y "Huh."
 
-    y "That's it?"
+    y "We actually did something."
 
-    sp "That's it."
+    y "The whole city isn't magically fixed..."
 
-    sp "Hope isn't pretending things are fine."
+    y "...but it's better than it was."
 
-    sp "It's noticing that things can improve, and that you helped."
+    "Yinny watches a pair of volunteers carry another bag of garbage down the street."
 
-    menu:
-        "Promise to try it":
-            $ sparky_bond += 2
-            y "Okay. I'll try."
-            y "Today's thing is... the fish."
-            sp "A great start!"
+    y "I guess Trendy was right."
 
-        "Joke about it":
-            $ sparky_bond += 1
-            y "Today's good thing is that nobody has dropped garbage on me."
-            sp "A high bar, and you cleared it!"
+    y "People will help if you give them somewhere to start."
 
-    "Yinny watches the fish disappear under the water."
+    "A breeze moves through the city."
 
-    y "Thanks, Sparky."
+    "For once, it does not carry the smell of garbage."
 
-    y "I think I needed this."
+    y "Huge improvement."
 
-    sp "Anytime!"
-
-    sp "Also, I heard Stormy is building something."
-
-    y "Building what?"
-
-    sp "No idea."
-
-    sp "But the last time Stormy said 'don't worry,' a wall caught fire."
-
-    y "That's not reassuring."
-
-    sp "I know!"
-
-    sp "Let's go check on him!"
+    "Then a low rumble echoes somewhere beneath the street."
 
     y "..."
 
-    y "Hopefully nothing's exploded yet."
+    "The ground vibrates slightly."
+
+    y "That doesn't sound environmentally friendly."
+
+    "Another distant rumble follows."
+
+    y "Right."
+
+    y "Of course we're not done."
 
     scene black
     with fade
 
-    centered "Hope doesn't fix everything."
+    centered "END OF ACT 2"
 
-    centered "But it keeps you going long enough to fix something."
+    pause 0.7
+
+    centered "Sustainable Solutions"
 
     pause 2.0
 
-    jump act2_stormy
-
-
-# STORMY PART OF ACT 2
-label act2_stormy:
-
-    jump act4
+    jump act3_sparky
