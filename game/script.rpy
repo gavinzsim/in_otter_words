@@ -97,9 +97,11 @@ label wake_up:
 
     menu:
         "Get up":
+            $ record_decision("wake_up_alarm", "get_up", snooze_count + 1)
             jump get_up
 
         "Snooze":
+            $ record_decision("wake_up_alarm", "snooze", snooze_count + 1)
             $ snooze_count += 1
 
             if snooze_count >= 3:
@@ -306,9 +308,11 @@ label stormy_intro:
 
     menu:
         "Try to do something.":
+            $ record_decision("help_garbage_problem", "help")
             jump choose_help
 
         "It's not my problem":
+            $ record_decision("help_garbage_problem", "ignore")
             jump trash_ending
 
 

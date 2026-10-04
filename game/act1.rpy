@@ -145,6 +145,7 @@ label trendy_campaign:
         "What should the campaign focus on?"
 
         "Show the problem, then invite everyone to help fix it.":
+            $ record_decision("trendy_campaign_focus", "invite")
             $ community_support += 2
 
             show trendy happy speaking at trendy_right
@@ -154,6 +155,7 @@ label trendy_campaign:
             y "Disappointingly reasonable."
 
         "Post dramatic photos of the worst garbage piles.":
+            $ record_decision("trendy_campaign_focus", "dramatic")
             $ community_support += 1
 
             show trendy speaking at trendy_right
@@ -163,6 +165,7 @@ label trendy_campaign:
             y "Nothing motivates an otter like being mildly horrified."
 
         "Tell everyone the city is disgusting and it's their fault.":
+            $ record_decision("trendy_campaign_focus", "blame")
             $ community_support -= 2
 
             show trendy annoyed speaking at trendy_right
@@ -188,6 +191,7 @@ label trendy_campaign:
         "What should the cleanup post include?"
 
         "A meeting place, time, supplies, and a simple sign-up link.":
+            $ record_decision("trendy_cleanup_post", "details")
             $ community_support += 2
 
             show trendy happy speaking at trendy_right
@@ -199,6 +203,7 @@ label trendy_campaign:
             y "Organization... Terrifying."
 
         "Offer snacks and a group photo afterward.":
+            $ record_decision("trendy_cleanup_post", "snacks")
             $ community_support += 1
 
             show trendy speaking at trendy_right
@@ -210,6 +215,7 @@ label trendy_campaign:
             y "Finally. A cause I understand."
 
         "\"If you don't come, you personally hate the environment.\"":
+            $ record_decision("trendy_cleanup_post", "guilt")
             $ community_support -= 2
 
             show trendy shocked at trendy_right
@@ -237,6 +243,7 @@ label trendy_campaign:
         "How should Yinny respond?"
 
         "\"You're right. But it can fix this block today. One step at a time.\"":
+            $ record_decision("trendy_criticism_reply", "one_block")
             $ community_support += 2
 
             show trendy happy speaking at trendy_right
@@ -252,6 +259,7 @@ label trendy_campaign:
             t "We just need enough people willing to start."
 
         "\"Fair. We're starting small and seeing where it goes.\"":
+            $ record_decision("trendy_criticism_reply", "start_small")
             $ community_support += 1
 
             show trendy speaking at trendy_right
@@ -265,6 +273,7 @@ label trendy_campaign:
             t "But that sounds honest. Keep it."
 
         "\"Then stay home and enjoy the garbage.\"":
+            $ record_decision("trendy_criticism_reply", "dismiss")
             $ community_support -= 3
 
             show trendy annoyed speaking at trendy_right

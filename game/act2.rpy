@@ -151,6 +151,7 @@ label spendy_solutions:
         "Choose the main water improvement."
 
         "Install runoff screens — Cost: 20 | Improvement: +15":
+            $ record_decision("spendy_water_solution", "screens")
             $ city_budget -= 20
             $ water_quality += 15
             $ water_solution = "cheap"
@@ -166,6 +167,7 @@ label spendy_solutions:
             p "Exactly."
 
         "Install modular filtration — Cost: 50 | Improvement: +45":
+            $ record_decision("spendy_water_solution", "modular")
             $ city_budget -= 50
             $ water_quality += 45
             $ water_solution = "balanced"
@@ -181,6 +183,7 @@ label spendy_solutions:
             p "My favorite kind."
 
         "Install the Aqua-Sovereign 9000 — Cost: 100 | Improvement: +70":
+            $ record_decision("spendy_water_solution", "aqua_sovereign")
             $ city_budget -= 100
             $ water_quality += 70
             $ water_solution = "extreme"
@@ -222,6 +225,7 @@ label spendy_solutions:
         "What should they do about the damaged runoff pipe?"
 
         "Repair the pipe — Cost: 20 | Improvement: +20":
+            $ record_decision("spendy_pipe", "repair")
             $ city_budget -= 20
             $ water_quality += 20
 
@@ -234,6 +238,7 @@ label spendy_solutions:
             y "Very annoyingly logical."
 
         "Add public testing and refill stations — Cost: 10 | Improvement: +10":
+            $ record_decision("spendy_pipe", "testing")
             $ city_budget -= 10
             $ water_quality += 10
 
@@ -250,6 +255,7 @@ label spendy_solutions:
             p "Helping people see a problem isn't the same as fixing its source."
 
         "Build a fountain to show for 'water awareness' — Cost: 60 | Improvement: +5":
+            $ record_decision("spendy_pipe", "fountain")
             $ city_budget -= 60
             $ water_quality += 5
 
@@ -299,6 +305,7 @@ label spendy_solutions:
         "How should they handle the valve?"
 
         "Install a standard replacement — Cost: 20 | Improvement: +15":
+            $ record_decision("spendy_valve", "standard")
             $ city_budget -= 20
             $ water_quality += 15
 
@@ -313,6 +320,7 @@ label spendy_solutions:
             y "You've never looked happier."
 
         "Monitor it for now — Cost: 0 | Improvement: -5":
+            $ record_decision("spendy_valve", "monitor")
             $ water_quality -= 5
 
             show spendy sad speaking at spendy_right
@@ -328,6 +336,7 @@ label spendy_solutions:
             p "Sometimes that's the realistic option."
 
         "Install a premium smart valve — Cost: 65 | Improvement: +15":
+            $ record_decision("spendy_valve", "premium")
             $ city_budget -= 65
             $ water_quality += 15
 
