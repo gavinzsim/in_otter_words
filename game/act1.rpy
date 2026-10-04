@@ -223,7 +223,8 @@ label trendy_campaign:
             t "We cannot guilt-trip the entire city!"
 
             y "Technically, we can."
-
+            hide trendy shocked
+            show trendy annoyed speaking at trendy_right
             t "We should not."
 
             y "Important distinction, we still can."

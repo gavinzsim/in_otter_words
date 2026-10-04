@@ -397,8 +397,6 @@ label choose_help:
     scene black
     with fade
 
-    centered "MAIN STORY"
-
     centered "Maybe one otter can't fix everything."
 
     centered "But one otter can start."
@@ -430,8 +428,6 @@ label main_story:
 
     # Later:
     # jump trendy_arc
-
-    centered "End of Opening Demo"
 
     jump act1
 

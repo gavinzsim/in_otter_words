@@ -5,6 +5,13 @@ image bg lab = "images/normal_stormy_lab.png"
 image bg bad lab = "images/destroyed_stormy_lab.png"
 image StormySad = "images/Stormy_Sad.png"
 image StormySadSpeaking = "images/Stormy_Sad_Speaking.png"
+image stormyShock = "images/Stormy_Shocked.png"
+image sparkyHappy = "images/Sparky_Happy.png"
+image stormyAnnoyed = "images/Stormy_Annoyed.png"
+image stormyAnnoyedSpeak = "images/Stormy_Annoyed_Speaking.png"
+image sparkyHappySpeak = "images/Sparky_Happy_Speaking.png"
+image spendyHappy = "images/Spending_Happy.png"
+image spendyShock = "images/Spendy_Shocked.png"
 
 # State for Act 4's component-building choices.
 default correct_tools = 0
@@ -145,6 +152,7 @@ label act4_part3:
     hide SparkyHappy
     hide trendy happy
     hide spendy normal
+    hide SparkyHappy
     show StormyShocked
     s "What the... you guys were listening this whole time..."
 
@@ -155,6 +163,7 @@ label act4_part3:
     s "I still don't know how to feel. I can't believe you guys are my friends. I'm so glad you all came to help me save the environment with my machine!"
 
     show trendy happy
+    hide trendy happy
     t "Well, of course! We're a team, aren't we?"
 
     show StormyHappySpeaking
@@ -166,7 +175,7 @@ label act4_part3:
 label building_minigame:
     scene bg lab
     show yinny at yinny_left
-    show StormyHappySpeaking
+    show StormyHappySpeaking at right
     s "Okay, so here's the plan! I need you all to focus and help me finish this project!"
     s "We need three components, so I need you guys to grab the right ones for me, okay?"
 
@@ -178,6 +187,8 @@ label building_minigame:
             y "This one?"
             s "Perfect!"
             s "That's exactly what we need."
+            hide StormyHappySpeaking
+            show trendy happy
             t "Yay, you're so smart, Yinny!"
             jump second_component
 
@@ -185,12 +196,22 @@ label building_minigame:
             $ record_decision("stormy_first_component", "duck")
             $ wrong_tools += 1
             y "This?"
+            hide StormyHappySpeaking
+            show stormyAnnoyed at right
             s "..."
+            hide stormyAnnoyed
+            show stormyAnnoyedSpeak at right
             s "Yinny."
             y "Yeah?"
             s "That's a rubber duck."
+            hide stormyAnnoyedSpeak
+            show sparkyHappy
             sp "I think it looks important."
+            hide sparkyHappy
+            show stormyAnnoyedSpeak at right
             s "It is not important. It's a rubber duck."
+            hide stormyAnnoyedSpeak
+            show sparkyHappy
             sp "I'm sure it's fine, let's use it!"
             jump second_component
 
@@ -198,6 +219,7 @@ label building_minigame:
 label second_component:
     scene bg lab
     show yinny at yinny_left
+    show StormyNormal at right
     s "Now we need something to stabilize the machine. This lets us make sure no garbage can fall out either!"
     y "Got it."
 
@@ -207,6 +229,8 @@ label second_component:
             $ correct_tools += 1
             $ machine_progress += 1
             s "Excellent!"
+            hide StormyNormal
+            show sparkyHappy
             sp "We're actually getting somewhere!"
             $ teamwork += 1
             jump third_component
@@ -214,10 +238,15 @@ label second_component:
         "A giant spoon":
             $ record_decision("stormy_stabilizer", "spoon")
             $ wrong_tools += 1
+            hide StormyNormal
+            show sparkyHappy
             sp "I vote for the spoon."
+            show stormyAnnoyedSpeak
             s "Why?"
             sp "Because it's giant."
             s "That isn't a reason."
+            hide sparkyHappy
+            show trendy happy
             t "So is the bucket, but I think a spoon is good for scooping out garbage!"
             jump third_component
 
@@ -225,6 +254,7 @@ label second_component:
 label third_component:
     scene bg lab
     show yinny at yinny_left
+    show StormyNormal at right
     s "One final component."
     s "This one is important."
     y "What does it do?"
@@ -238,6 +268,7 @@ label third_component:
             $ safety += 2
             $ machine_progress += 1
             s "Perfect."
+            show spendyHappy
             p "Good. That makes sense."
             p "Now we'll know what kind of garbage we collected!"
             s "Exactly."
@@ -250,7 +281,10 @@ label third_component:
             y "We don't really need that."
             s "What? Why?"
             y "I mean, why don't we just finish the project and see what happens?"
+            hide StormyNormal
+            show spendyShock
             p "That is the important point of the machine??? It also stops it from overflowing and causing other errors???"
+            show StormyNormal at right
             s "..."
             s "Fine."
             jump machine_ready
@@ -261,19 +295,27 @@ label machine_ready:
     with dissolve
 
     show yinny at yinny_left
-    show StormyHappySpeaking
+    show StormyHappySpeaking at right
     s "Alright, everyone!"
     s "It's ready!"
+    show sparkyHappy
     sp "LET'S GO!"
+    hide sparkyHappy
+    show spendyHappy
     p "Wait."
+    hide spendyHappy
+    show trendy happy
     t "What?"
     p "Shouldn't we test it first?"
     s "It's fine. We did all the right moves... I think..."
     y "Stormy."
+    hide StormyHappySpeaking
+    show StormyNormal
     s "What?"
     y "You just spent the entire day telling us that this machine is important."
     y "Maybe we should make sure it's safe."
-    pause
+    hide StormyNormal
+    show stormyShock at right
     s "..."
     s "You're right. Better safe than sorry."
     $ safety += 1
