@@ -3,36 +3,55 @@
 # Declare characters used by this game. The color argument colorizes the
 # name of the character.
 
-define e = Character("Eileen")
-define t = Character("Trendy", color="#c8ffc8")
-default test = "hi my name is trendy!"
+define y = Character("Yinny", color="#FFFFFF")
+define st = Character("Stormy", color="#6FA8DC")
+define tr = Character("Trendy", color="#E06666")
+define sp = Character("Sparky", color="#FFD966")
+define sd = Character("Spendy", color="#93C47D")
+
+
+
+default machine_progress = 0
+default correct_tools = 0
+default wrong_tools = 0
+default teamwork = 0
+default safety = 0
 
 # The game starts here.
 
 label start:
+    scene bg StormyScene1
+    with fade
 
-    # Show a background. This uses a placeholder by default, but you can
-    # add a file (named either "bg room.png" or "bg room.jpg") to the
-    # images directory to show it.
+    "Stormy sobs loudly as he runs away from his completed experiment."
+    st "As always, I'm all alone." 
+    st "I just wanted to show everyone my talent."
 
-    scene bg room
+    scene bg Scene2
+    with fade
+    "He hops on the couch and cuddles with a strange new plushie"
 
-    # This shows a character sprite. A placeholder is used, but you can
-    # replace it by adding a file named "eileen happy.png" to the images
-    # directory.
+    scene bg Scene3
+    with fade
 
-    show trendy
+    st "But of course no one actually cares."
+    "Stormy continues to cry himself to sleep"
 
-    # These display lines of dialogue.
+    "ding dong, ding dong"
 
-    t test
+    scene bg Scene4
 
-    e "I need you to help me pleaaaaase!"
+    st "wait who's here?"
 
-    show eileen happy
+    scene bg Scene5
+    with fade
 
-    e "okay okay what is it? I'm tired"
+    st "I'm coming!"
+    "Stormy wipes his tears and rushes to the door."
 
+    st "Sniff sniff who's here"
+
+
+    
     # This ends the game.
-
     return
