@@ -169,6 +169,7 @@ def main():
                 def read(self, amount):
                     return b'{"choices":[{"message":{"content":"{broken"}}]}'
 
+            attempts = []
             def fake_urlopen(request, timeout):
                 assert timeout == 90
                 assert request.full_url == ns["OPENROUTER_FINALE_URL"]
@@ -177,10 +178,14 @@ def main():
                 assert payload["model"] == "z-ai/glm-5.3-flash"
                 assert payload["provider"]["require_parameters"]
                 assert json.loads(payload["messages"][1]["content"].split("\n")[1]) == low
+                attempts.append(payload)
                 return InvalidResponse()
 
             ns["urllib"].request.urlopen = fake_urlopen
             assert ns["generate_finale"](low)["ending_title"] == "The Story Continues"
+            assert len(attempts) == 2
+            assert len(attempts[1]["messages"]) == 3
+            assert any("Retrying finale generation once" in line for line in logs)
             assert not any("test-secret" in line for line in logs)
 
             valid = {"ending_title": "A Different Future", "summary": "The city changes in unexpected ways.",
@@ -190,10 +195,19 @@ def main():
                                  "outcome_for": [name]} for name in ns["FINALE_MAIN_OTTERS"]],
                      "final_line": "There was still another day to shape."}
             class ValidResponse(InvalidResponse):
+                def __init__(self, finale):
+                    self.finale = finale
                 def read(self, amount):
-                    return json.dumps({"choices": [{"message": {"content": json.dumps(valid)}}]}).encode("utf-8")
-            ns["urllib"].request.urlopen = lambda request, timeout: ValidResponse()
+                    return json.dumps({"choices": [{"finish_reason": "stop",
+                                                    "message": {"content": json.dumps(self.finale)}}]}).encode("utf-8")
+            ns["urllib"].request.urlopen = lambda request, timeout: ValidResponse(valid)
             assert ns["generate_finale"](low)["ending_title"] == "A Different Future"
+            incomplete = copy.deepcopy(valid)
+            incomplete["scenes"][-1]["outcome_for"] = []
+            retry_responses = iter((incomplete, valid))
+            ns["urllib"].request.urlopen = lambda request, timeout: ValidResponse(next(retry_responses))
+            assert ns["generate_finale"](low)["ending_title"] == "A Different Future"
+            assert any("missing main otter outcomes: Stormy" in line for line in logs)
         finally:
             ns["urllib"].request.urlopen = prior_urlopen
             if prior_key is None:

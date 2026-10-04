@@ -24,6 +24,11 @@ The model-written finale must reveal a future for Yinny, Trendy, Spendy, Sparky,
 and Stormy through the story. It can use up to 20 generated dialogue or narration
 lines, including its final line; each otter's outcome follows that playthrough's
 choices and relationships rather than a preset character ending.
+If you see the generic title `The Story Continues`, open `log.txt` beside the
+project or game executable and search for `[Finale]`. The log identifies a
+missing key, HTTP or network failure, or the validation rule that rejected the
+model response. Invalid model responses are retried once. A successful run logs
+`Response received; JSON validation passed; displaying AI finale.`
 For a build distributed to other players, use the environment variable so a
 plaintext key is not packaged with the game files.
 

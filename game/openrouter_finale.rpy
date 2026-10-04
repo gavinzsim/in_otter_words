@@ -162,7 +162,8 @@ init python:
                               "text": _finale_text(scene["text"], 240),
                               "outcome_for": outcome_for})
         if covered_otters != set(FINALE_MAIN_OTTERS):
-            raise ValueError("missing main otter outcome")
+            missing = [name for name in FINALE_MAIN_OTTERS if name not in covered_otters]
+            raise ValueError("missing main otter outcomes: " + ", ".join(missing))
         return {"ending_title": title, "summary": summary,
                 "scenes": validated, "final_line": final_line}
 
@@ -201,31 +202,57 @@ init python:
                  + ", ".join(FINALE_SPRITES) + "."},
             ],
         }
-        request = urllib.request.Request(
-            OPENROUTER_FINALE_URL, data=json.dumps(payload).encode("utf-8"),
-            headers={"Authorization": "Bearer " + api_key,
-                     "Content-Type": "application/json", "X-Title": "In Otter Words"},
-            method="POST")
-        started = time.time()
-        try:
-            with urllib.request.urlopen(request, timeout=90) as response:
-                if response.status != 200:
-                    raise RuntimeError("OpenRouter HTTP %d" % response.status)
-                raw = response.read(131073)
-        except Exception as error:
-            # The reason (e.g. "timed out", "HTTP Error 401") is safe to log; bodies are not.
-            reason = getattr(error, "reason", "") or ""
-            renpy.log("[Finale] Request failed after %.1fs: %s %s"
-                      % (time.time() - started, type(error).__name__, reason))
-            raise
-        renpy.log("[Finale] OpenRouter responded in %.1fs." % (time.time() - started))
-        if len(raw) > 131072:
-            raise ValueError("oversized OpenRouter response")
-        envelope = json.loads(raw.decode("utf-8"))
-        content = envelope["choices"][0]["message"]["content"]
-        if not isinstance(content, str):
-            raise ValueError("missing OpenRouter message content")
-        return validate_finale(json.loads(content))
+        original_messages = payload["messages"]
+        for attempt in (1, 2):
+            if attempt == 2:
+                payload["messages"] = original_messages + [{
+                    "role": "user", "content":
+                    "The previous response could not be displayed. Generate a fresh, complete JSON finale. "
+                    "Every scene needs outcome_for, all five otters need a meaningful future in the story, "
+                    "and there must be 5 to 19 scenes plus one final line."
+                }]
+            request = urllib.request.Request(
+                OPENROUTER_FINALE_URL, data=json.dumps(payload).encode("utf-8"),
+                headers={"Authorization": "Bearer " + api_key,
+                         "Content-Type": "application/json", "X-Title": "In Otter Words"},
+                method="POST")
+            started = time.time()
+            try:
+                with urllib.request.urlopen(request, timeout=90) as response:
+                    if response.status != 200:
+                        raise RuntimeError("OpenRouter HTTP %d" % response.status)
+                    raw = response.read(131073)
+            except Exception as error:
+                # The reason (e.g. "timed out", "HTTP Error 401") is safe to log; bodies are not.
+                reason = getattr(error, "reason", "") or ""
+                renpy.log("[Finale] Request failed after %.1fs: %s %s"
+                          % (time.time() - started, type(error).__name__, reason))
+                raise
+            renpy.log("[Finale] OpenRouter responded in %.1fs (attempt %d)."
+                      % (time.time() - started, attempt))
+            try:
+                if len(raw) > 131072:
+                    raise ValueError("oversized OpenRouter response")
+                envelope = json.loads(raw.decode("utf-8"))
+                choice = envelope["choices"][0]
+                finish_reason = choice.get("finish_reason")
+                if finish_reason in ("length", "stop", "content_filter", "tool_calls"):
+                    renpy.log("[Finale] OpenRouter finish reason: %s." % finish_reason)
+                content = choice["message"]["content"]
+                if not isinstance(content, str):
+                    raise ValueError("missing OpenRouter message content")
+                return validate_finale(json.loads(content))
+            except (json.JSONDecodeError, ValueError, KeyError, IndexError, TypeError) as error:
+                if isinstance(error, json.JSONDecodeError):
+                    reason = "malformed JSON"
+                elif isinstance(error, ValueError):
+                    reason = str(error)
+                else:
+                    reason = "missing or invalid response field (%s)" % type(error).__name__
+                renpy.log("[Finale] Model response rejected (attempt %d): %s." % (attempt, reason))
+                if attempt == 2:
+                    raise
+                renpy.log("[Finale] Retrying finale generation once.")
 
     def generate_finale(context):
         if not load_openrouter_key():
