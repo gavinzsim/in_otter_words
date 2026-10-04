@@ -12,6 +12,10 @@ default wrong_tools = 0
 default machine_progress = 0
 default safety = 0
 default teamwork = 0
+transform flip:
+    xalign 0.25
+    yalign 1.0
+    xzoom -1
 
 label act4:
     scene bg livingroom
@@ -19,7 +23,7 @@ label act4:
 
     "Stormy sobs loudly as he runs away from his completed experiment."
 
-    show StormyNormal
+    show StormySad
     s "As always, I'm all alone."
     s "I just wanted to show everyone my talent, to show them my creations..."
 
@@ -29,7 +33,8 @@ label act4:
     "Stormy continues to cry himself to sleep."
 
     "Ding dong, ding dong."
-
+    hide StormySad
+    show StormySadSpeaking at flip
     s "Wait, who's there?"
     s "I'm coming!"
     "Stormy wipes his tears and rushes to the door."
@@ -38,12 +43,14 @@ label act4:
     "Stormy opens the door and sees a familiar face."
 
     y "Hey, I hope it's okay if I barge in here randomly."
-
-    show StormyShocked
+    hide StormySadSpeaking
+    show StormyShocked at right
     s "Yinny! You came!"
 
+    show yinny at left
     y "Yeah, I came over. What are you working on?"
 
+    hide StormyShocked                    
     show StormyHappySpeaking
     s "Something incredible."
 
