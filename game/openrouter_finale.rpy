@@ -35,6 +35,7 @@ init python:
                    "annoyed": "StormyAnnoyed", "shocked": "StormyShocked"},
     }
     FINALE_SPEAKERS = ("Yinny", "Trendy", "Spendy", "Sparky", "Stormy", "Narrator")
+    FINALE_MAIN_OTTERS = ("Yinny", "Trendy", "Spendy", "Sparky", "Stormy")
     FINALE_DEFAULT_BACKGROUND = "park"
 
     FINALE_SCENE_SCHEMA = {
@@ -45,8 +46,10 @@ init python:
             "speaker": {"type": "string", "enum": list(FINALE_SPEAKERS)},
             "expression": {"type": "string", "enum": ["normal", "happy", "sad", "annoyed", "shocked"]},
             "text": {"type": "string", "description": "One short visual-novel dialogue or narration beat."},
+            "outcome_for": {"type": "array", "items": {"type": "string", "enum": list(FINALE_MAIN_OTTERS)},
+                            "description": "Main otters whose future this beat actually reveals; empty for other beats."},
         },
-        "required": ["background", "characters", "speaker", "expression", "text"],
+        "required": ["background", "characters", "speaker", "expression", "text", "outcome_for"],
     }
     FINALE_JSON_SCHEMA = {
         "type": "object", "additionalProperties": False,
@@ -60,24 +63,35 @@ init python:
     }
 
     FINALE_SYSTEM_PROMPT = (
-        "You are the finale writer for In Otter Words, a lighthearted environmental visual novel about otters. "
+        "You are the finale writer for In Otter Words, an environmental visual novel about otters whose tone can change with the player's actions. "
         "You receive the complete history of one playthrough. Continue the story and invent the future caused by those actions. "
         "This is a new visual-novel sequence, never a report card or one of several stock endings. "
         "Use the normalized score only to understand the general magnitude and direction of Yinny's impact. "
         "Specific decisions, their consequences, arc outcomes, relationships, and minigame results determine the actual future. "
         "Two players with similar scores but different choices should have substantially different endings. "
-        "A strong playthrough can lead to a thriving city; mixed actions should leave both progress and problems; "
-        "very poor actions may lead to severe, even absurd environmental or societal collapse when the facts justify it. "
-        "Dark comedy is welcome, but never graphic horror. Do not force hope into a disastrous playthrough. "
-        "Decide what happens to Yinny, the city, and whichever of Trendy, Spendy, Sparky, and Stormy matter most here. "
+        "Let the scale and emotional tone of the future follow the combined consequences, not a default upbeat template. "
+        "The city and otters may flourish, become happier, grow apart, become sadder, suffer lasting harm, or face catastrophe. "
+        "If the playthrough truly supports it, serious injury or death is possible, including the loss of multiple otters; "
+        "never add it merely for shock or because of one isolated mistake. Keep any violence non-graphic. "
+        "Equally, a strong playthrough can earn sweeping improvements and genuinely joyful lives. "
+        "Mixed actions may produce an uneven or bittersweet future. Do not force hope into a disastrous playthrough "
+        "or tragedy into a successful one. Dark comedy is welcome when it fits. "
+        "Show what ultimately happens to each main otter: Yinny, Trendy, Spendy, Sparky, and Stormy. "
+        "Use each otter's own choices, relationship history, successes, failures, and world circumstances; "
+        "their futures need not share the city's overall fortune or each other's tone. "
+        "Reveal those futures through events, narration, conversations, and reactions woven into one continuing story, "
+        "not a roll call or five separate score summaries. A shared beat may reveal more than one otter's future. "
+        "For each beat, set outcome_for only to the otters whose future the text meaningfully reveals; "
+        "by the end the outcome_for tags must cover all five main otters. Mere appearance in the art does not count. "
         "Imagine plausible future events, jobs, programs, policies, setbacks, and relationships without contradicting "
         "established playthrough facts. A broken prototype cannot be treated as already working. "
         "Naturally reference about 3 to 6 specific supplied choices, successes, failures, or minigame moments. "
-        "Include at least one character joke that calls back to a real event from this playthrough; vary the joke. "
+        "When it fits the tone, include a memorable interaction or joke rooted in a character's personality or a real event. "
         "Make the finale sincere and emotional, with character reactions and a memorable final line. "
         "You may use a time skip and choose the scene order. Existing background art illustrates the closest available place; "
         "describe future changes in narration when the art cannot show them exactly. "
-        "Write 8 to 16 concise narration or dialogue beats suitable for Ren'Py text boxes. "
+        "Write 5 to 19 concise narration or dialogue beats suitable for Ren'Py text boxes; "
+        "the separately displayed final_line makes at most 20 generated dialogue lines total. Use fewer when the story is complete. "
         "Each scene's expression changes the speaker's sprite when that pose exists; use normal for narration. "
         "Do not mention points, scores, percentages, best or worst choices, JSON, variables, prompts, APIs, or AI to the player. "
         "Do not call the player good or bad. Return only JSON matching the required schema."
@@ -121,9 +135,10 @@ init python:
         summary = _finale_text(data["summary"], 500)
         final_line = _finale_text(data["final_line"], 240)
         scenes = data["scenes"]
-        if not isinstance(scenes, list) or not 8 <= len(scenes) <= 16:
+        if not isinstance(scenes, list) or not 5 <= len(scenes) <= 19:
             raise ValueError("invalid finale scene count")
         validated = []
+        covered_otters = set()
         for scene in scenes:
             if not isinstance(scene, dict) or set(scene) != set(FINALE_SCENE_SCHEMA["required"]):
                 raise ValueError("invalid finale scene fields")
@@ -135,9 +150,18 @@ init python:
                                             if isinstance(name, str) and name in FINALE_SPRITES))
             speaker = scene["speaker"] if isinstance(scene["speaker"], str) and scene["speaker"] in FINALE_SPEAKERS else "Narrator"
             expression = scene["expression"] if isinstance(scene["expression"], str) and scene["expression"] in ("normal", "happy", "sad", "annoyed", "shocked") else "normal"
+            outcome_for = scene["outcome_for"]
+            if (not isinstance(outcome_for, list) or
+                    any(not isinstance(name, str) or name not in FINALE_MAIN_OTTERS for name in outcome_for)):
+                raise ValueError("invalid finale outcome tags")
+            outcome_for = list(dict.fromkeys(outcome_for))
+            covered_otters.update(outcome_for)
             validated.append({"background": background, "characters": characters,
                               "speaker": speaker, "expression": expression,
-                              "text": _finale_text(scene["text"], 240)})
+                              "text": _finale_text(scene["text"], 240),
+                              "outcome_for": outcome_for})
+        if covered_otters != set(FINALE_MAIN_OTTERS):
+            raise ValueError("missing main otter outcome")
         return {"ending_title": title, "summary": summary,
                 "scenes": validated, "final_line": final_line}
 
@@ -153,9 +177,9 @@ init python:
 
     def request_openrouter_finale(context):
         # Key comes from game/secrets.rpy (git-ignored); env var is the fallback.
-        api_key = getattr(store, "openrouter_key", None) or os.environ.get("OPENROUTER_API_KEY")
+        api_key = load_openrouter_key()
         if not api_key:
-            raise RuntimeError("openrouter_key is missing (define it in secrets.rpy or set OPENROUTER_API_KEY)")
+            raise RuntimeError("OpenRouter API key is missing")
         payload = {
             "model": OPENROUTER_FINALE_MODEL, "stream": False, "temperature": 0.7,
             "max_tokens": 3000,
@@ -189,6 +213,9 @@ init python:
         return validate_finale(json.loads(content))
 
     def generate_finale(context):
+        if not load_openrouter_key():
+            renpy.log("[Finale] OpenRouter API key missing; using technical fallback. Set game/secrets.rpy or OPENROUTER_API_KEY.")
+            return build_fallback_finale(context)
         try:
             scoring = context["scoring"]
             renpy.log("[Finale] Generation: %d/%d (%.1f%%), %d decisions; best=%d okay=%d worst=%d" %

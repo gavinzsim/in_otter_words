@@ -20,6 +20,10 @@ allowed visual asset IDs to OpenRouter using `z-ai/glm-5.3-flash`. The key is
 never included in the context JSON or logs. Without a key or on an API error,
 the game shows one generic technical fallback. Score and relationship values
 never select a preset ending.
+The model-written finale must reveal a future for Yinny, Trendy, Spendy, Sparky,
+and Stormy through the story. It can use up to 20 generated dialogue or narration
+lines, including its final line; each otter's outcome follows that playthrough's
+choices and relationships rather than a preset character ending.
 For a build distributed to other players, use the environment variable so a
 plaintext key is not packaged with the game files.
 

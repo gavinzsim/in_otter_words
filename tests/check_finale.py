@@ -147,11 +147,17 @@ def main():
         try:
             os.environ.pop("OPENROUTER_API_KEY", None)
             assert ns["generate_finale"](low)["ending_title"] == "The Story Continues"
+            assert any("API key missing" in line for line in logs)
+            store.openrouter_key = "PUT_YOUR_OPENROUTER_API_KEY_HERE"
+            assert ns["load_openrouter_key"]() is None
+            assert ns["generate_finale"](low)["ending_title"] == "The Story Continues"
             store.openrouter_key = "local-test-secret"
             assert ns["load_openrouter_key"]() == "local-test-secret"
             os.environ["OPENROUTER_API_KEY"] = "test-secret"
             assert ns["load_openrouter_key"]() == "local-test-secret"
             store.openrouter_key = None
+            assert ns["load_openrouter_key"]() == "test-secret"
+            store.openrouter_key = "PUT_YOUR_OPENROUTER_API_KEY_HERE"
             assert ns["load_openrouter_key"]() == "test-secret"
 
             class InvalidResponse:
@@ -166,6 +172,7 @@ def main():
             def fake_urlopen(request, timeout):
                 assert timeout == 90
                 assert request.full_url == ns["OPENROUTER_FINALE_URL"]
+                assert request.get_header("Authorization") == "Bearer test-secret"
                 payload = json.loads(request.data)
                 assert payload["model"] == "z-ai/glm-5.3-flash"
                 assert payload["provider"]["require_parameters"]
@@ -177,9 +184,10 @@ def main():
             assert not any("test-secret" in line for line in logs)
 
             valid = {"ending_title": "A Different Future", "summary": "The city changes in unexpected ways.",
-                     "scenes": [{"background": "park", "characters": ["Yinny", "Trendy"],
-                                 "speaker": "Trendy", "expression": "happy",
-                                 "text": "Remember our cleanup?"} for _ in range(8)],
+                     "scenes": [{"background": "park", "characters": [name],
+                                 "speaker": name, "expression": "happy",
+                                 "text": "%s found a different future after the cleanup." % name,
+                                 "outcome_for": [name]} for name in ns["FINALE_MAIN_OTTERS"]],
                      "final_line": "There was still another day to shape."}
             class ValidResponse(InvalidResponse):
                 def read(self, amount):
@@ -194,20 +202,38 @@ def main():
                 os.environ["OPENROUTER_API_KEY"] = prior_key
 
         scene = {"background": "../../private", "characters": ["Yinny", "Alien"],
-                 "speaker": "Alien", "expression": "shocked", "text": "Look [secret] {tag}!"}
+                 "speaker": "Alien", "expression": "shocked", "text": "Look [secret] {tag}!",
+                 "outcome_for": []}
         data = {"ending_title": "Ripples", "summary": "A complicated future.",
-                "scenes": [copy.deepcopy(scene) for _ in range(8)], "final_line": "Keep going."}
+                "scenes": [dict(copy.deepcopy(scene), outcome_for=[name])
+                           for name in ns["FINALE_MAIN_OTTERS"]], "final_line": "Keep going."}
         validated = ns["validate_finale"](data)
         assert validated["scenes"][0]["background"] == "park"
         assert validated["scenes"][0]["characters"] == ["Yinny"]
         assert validated["scenes"][0]["speaker"] == "Narrator"
         assert "[" not in validated["scenes"][0]["text"]
+        assert len(validated["scenes"]) + 1 == 6
+        missing_outcome = copy.deepcopy(data)
+        missing_outcome["scenes"][-1]["outcome_for"] = []
+        try:
+            ns["validate_finale"](missing_outcome)
+            assert False, "missing otter outcome was accepted"
+        except ValueError:
+            pass
+        too_many_lines = copy.deepcopy(data)
+        too_many_lines["scenes"] *= 4  # 20 beats plus the final line exceeds the cap.
+        try:
+            ns["validate_finale"](too_many_lines)
+            assert False, "finale exceeded the 20-line cap"
+        except ValueError:
+            pass
         assert ns["resolve_finale_background"]("clean_city_sunset") == "clean_city"
         assert ns["resolve_finale_background"]("broken_lab") == "damaged_lab"
         # A valid model response is returned unchanged in direction and title.
+        store.openrouter_key = "local-test-secret"
         ns["request_openrouter_finale"] = lambda context: validated
         assert ns["generate_finale"](low)["ending_title"] == "Ripples"
-    print("Finale checks passed: context depth, choice counts, menu coverage, assets, varied scores, one fallback, save state, JSON, request, invalid visuals, dedup.")
+    print("Finale checks passed: context, scoring, assets, API handling, five otter outcomes, 20-line cap, fallback, and save state.")
 
 
 if __name__ == "__main__":

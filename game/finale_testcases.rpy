@@ -3,9 +3,15 @@ init python:
     def test_generated_response(context):
         scene = {"background": "untrusted/path", "characters": ["Yinny", "Stormy", "Sparky"],
                  "speaker": "Unknown", "expression": "happy",
-                 "text": "The next safe step belongs to all of us."}
+                 "text": "The next safe step belongs to all of us.", "outcome_for": []}
+        scenes = []
+        for name in FINALE_MAIN_OTTERS:
+            beat = dict(scene)
+            beat["text"] = "%s found a new direction after the city's changes." % name
+            beat["outcome_for"] = [name]
+            scenes.append(beat)
         return validate_finale({"ending_title": "A Shared Start", "summary": "The team imagines a shared future.",
-                                "scenes": [dict(scene) for _ in range(8)],
+                                "scenes": scenes,
                                 "final_line": "Keep making small changes together."})
 
 testcase finale_fallback_render:
