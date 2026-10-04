@@ -528,7 +528,7 @@ label spendy_intro:
 
     y "There it is."
 
-    jump spendy_water_investigation
+    jump river_cleanup_start
 
 
 # Water investigation
