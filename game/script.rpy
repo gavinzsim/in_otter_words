@@ -10,6 +10,7 @@ image bg city = "images/city.png"
 image bg bathroom = "images/bathroom.png"
 image bg campus = "images/campus.png"
 image bg bedroom = "images/bedroom.png"
+image bg livingroom = "images/act4_living.jpg"
 
 # Characters
 image yinny = "images/yinny.webp"
@@ -384,43 +385,38 @@ label main_story:
     # jump trendy_arc
 
     centered "End of Opening Demo"
-
-    return
+    jump act4
 
 #Placeholder for Act 4
-
-
 # The game starts here.
 
 label act4:
-    scene bg scene1
+    scene bg livingroom
     with fade
 
     "Stormy sobs loudly as he runs away from his completed experiment."
-    st "As always, I'm all alone." 
-    st "I just wanted to show everyone my talent."
+    
+    s "As always, I'm all alone." 
+    s "I just wanted to show everyone my talent."
 
     "He hops on the couch and cuddles with a strange new plushie"
 
-    st "But of course no one actually cares."
+    s "But of course no one actually cares."
     "Stormy continues to cry himself to sleep"
 
     "ding dong, ding dong"
 
-    st "wait who's here?"
+    s "wait who's here?"
 
 
-    st "I'm coming!"
+    s "I'm coming!"
     "Stormy wipes his tears and rushes to the door."
 
-    st "Sniff sniff who's here"
+    s "Sniff sniff who's here"
 
+    "Stormy opens the door and sees a familiar face."
 
-    
-    # This ends the game.
-    return
-
-
+    y "Hey I hope it's okay if I barge in here randomly."
 
 
     return
