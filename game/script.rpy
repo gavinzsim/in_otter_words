@@ -4,6 +4,7 @@
 # Characters
 define y = Character("Yinny")
 define s = Character("Stormy")
+define sp = Character("Sparky")
 
 # Backgrounds
 image bg city = "images/dirty_city.png"
@@ -11,6 +12,9 @@ image bg bathroom = "images/bathroom.png"
 image bg campus = "images/campus.png"
 image bg bedroom = "images/yinny_bedroom.png"
 image bg livingroom = "images/act4_living.jpg"
+image bg park = "images/park.png"
+image bg river = "images/dirty_river.png"
+
 
 # Characters
 image yinny = "images/yinny_otter.png"
@@ -23,6 +27,11 @@ image StormyNormal = "images/Stormy_Normal.png"
 image StormySpeaking = "images/Stormy_Speaking.png"
 image StormyShocked = "images/Stormy_Shocked.png"
 image garbage_pile = "images/garbage_pile.png"
+image sparky = "images/Sparky_Normal.png"
+image SparkyHappy = "images/Sparky_Happy.png"
+image SparkyWorried = "images/Sparky_Annoyed.png"
+image SparkySad = "images/Sparky_Sad.png"
+
 
 # Yinny's canvas includes visual space beneath her feet; offset it downward so
 # the visible sprite baseline matches Stormy's.
@@ -40,10 +49,19 @@ transform stormy_right:
     yalign 1.0
     zoom 0.7
 
+transform sparky_right:
+    xalign 1.0
+    yalign 1.0
+    zoom 0.7
+
+
 
 # VARIABLES
 
 default snooze_count = 0
+default cynicism = 0
+default sparky_bond = 0
+
 
 
 # GAME START
