@@ -6,9 +6,10 @@ define y = Character("Yinny")
 define s = Character("Stormy")
 
 # Backgrounds
-image bg city = "images/city.jpg"
-image bg bathroom = "images/bathroom.jpg"
+image bg city = "images/city.png"
+image bg bathroom = "images/bathroom.png"
 image bg campus = "images/campus.png"
+image bg bedroom = "images/bedroom.png"
 
 # Characters
 image yinny = "images/yinny.webp"
