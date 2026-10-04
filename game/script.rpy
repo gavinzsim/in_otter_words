@@ -6,18 +6,18 @@ define y = Character("Yinny")
 define s = Character("Stormy")
 
 # Backgrounds
-image bg city = "images/clean_city.png"
+image bg city = "images/dirty_city.png"
 image bg bathroom = "images/bathroom.png"
 image bg campus = "images/campus.png"
 image bg bedroom = "images/yinny_bedroom.png"
 image bg livingroom = "images/act4_living.jpg"
 
 # Characters
-image yinny = "images/yinny.webp"
-image stormy = "images/stormy.webp"
-image StormyAnnoyedSpeaking = "images/StormyAnnoyedSpeaking.png"
-image StormyAnnoyed = "images/StormyAnnoyed.png"
-image StormyHappy = "images/StormyHappy.png"
+image yinny = "images/yinny_otter.png"
+image stormy = "images/Stormy_Normal.png"
+image StormyAnnoyedSpeaking = "images/Stormy_Annoyed_Speaking.png"
+image StormyAnnoyed = "images/Stormy_Annoyed.png"
+image StormyHappy = "images/Stormy_Happy.png"
 image StormyHappySpeaking = "images/Stormy_Happy_Speaking.png"
 image StormyNormal = "images/Stormy_Normal.png"
 image StormySpeaking = "images/Stormy_Speaking.png"
@@ -420,7 +420,27 @@ label main_story:
     # jump trendy_arc
 
     centered "End of Opening Demo"
-    jump act4
+
+    jump act1
+
+label act1:
+
+    jump act1_start
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #Placeholder for Act 4
 # The game starts here.
@@ -505,11 +525,11 @@ label act4:
 
     y "And you were going to build this thing by yourself?"
 
-    st "Of course."
+    s "Of course."
 
     y "Why?"
 
-    st "Because I know what I'm doing."
+    s "Because I know what I'm doing."
 
 
     return
