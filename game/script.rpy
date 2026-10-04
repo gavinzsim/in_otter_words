@@ -12,8 +12,25 @@ image bg campus = "images/campus.png"
 image bg bedroom = "images/bedroom.png"
 
 # Characters
-image yinny = "images/yinny.webp"
-image stormy = "images/stormy.webp"
+image yinny = "images/yinny_otter.png"
+image stormy = "images/Stormy_Normal.png"
+image garbage_pile = "images/garbage_pile.png"
+
+# Yinny's canvas includes visual space beneath her feet; offset it downward so
+# the visible sprite baseline matches Stormy's.
+transform yinny_left:
+    xalign 0.0
+    yalign 1.0
+    xoffset -75
+    yoffset 200
+    zoom 0.7
+
+# Place Stormy slightly inward from the right edge and align the characters
+# lower in the scene.
+transform stormy_right:
+    xalign 1.0
+    yalign 1.0
+    zoom 0.7
 
 # VARIABLES
 
@@ -43,6 +60,7 @@ label start:
 label wake_up:
 
     scene bg bedroom
+    show yinny at yinny_left
 
     "BEEP. BEEP. BEEP."
 
@@ -84,6 +102,8 @@ label snooze_ending:
     scene black
     with fade
 
+    show yinny at yinny_left
+
     "Several hours later..."
 
     y "..."
@@ -110,12 +130,16 @@ label get_up:
     scene bg bedroom
     with dissolve
 
+    show yinny at yinny_left
+
     y "Fine. I'm awake."
 
     y "Technically."
 
     scene bg bathroom
     with fade
+
+    show yinny at yinny_left
 
     "Yinny turns on the sink."
 
@@ -145,6 +169,8 @@ label outside:
 
     scene bg city
     with fade
+
+    show yinny at yinny_left
 
     y "Alright. New day."
 
@@ -177,6 +203,11 @@ label outside:
 
     y "MMMPH!"
 
+    scene bg city
+    with dissolve
+
+    show garbage_pile at yinny_left
+
     y "WHY IS THERE A WHOLE CHAIR IN HERE?!"
 
     s "Yinny?"
@@ -191,10 +222,9 @@ label outside:
 
     "Stormy starts pulling bags away."
 
-    scene bg city
-    with dissolve
-
-    show stormy
+    hide garbage_pile
+    show yinny at yinny_left
+    show stormy at stormy_right
 
     s "There."
 
@@ -359,6 +389,9 @@ label main_story:
 
     scene bg city
     with fade
+
+    show yinny at yinny_left
+    show stormy at stormy_right
 
     y "Alright."
 
